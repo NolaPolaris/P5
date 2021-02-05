@@ -1,43 +1,48 @@
+// CLASS CASE
 
 class Cell {
-    constructor() {
-      this.blocked = false;
-      //this.weapon = "weapon-none"; or 
+  constructor() {
+    this.blocked = false;
+    //this.weapon = "weapon-none"; or 
+  }
+}
+
+// Creation d'une class board (exercice)
+class Board {
+  constructor(boardSize){
+
+    this.map = new Array(boardSize);
+    
+    for (let x = 0; x < this.map.length; x++) {
+      this.map[x] = new Array(boardSize);
+        for (let y = 0; y < boardSize; y++){
+            this.map[x][y] = new Cell();
+        }
     }
   }
 
-const map_size = 10;
+  get boardSize() {
+    return this.map.length
+  }
 
-var map = new Array(map_size);
-
-for (x=0; x<map_size; x++) {
-    map[x] = new Array(map_size);
-    for (y=0; y<map_size; y++){
-        map[x][y] = new Cell();
+  printBoard() {
+    for (let y = 0; y < this.boardSize; y++) {
+      let line = "";
+      for (let x = 0; x < this.boardSize; x++) {
+        if (this.map[x][y].blocked){
+          line += "[ X ]";
+        }
+        else {
+          line += `[${x},${y}]`
+        }
+      }
+      console.log(line);
     }
+  }
 }
 
-var cell = map[1][2];
-// Obtenir des coordonnes random:
-
-getRandom = function(max) {
-    return Math.floor(Math.random() * Math.floor(max)) + Math.floor(Math.random() * Math.floor(max))
-}
-
-var randomCell = map[getRandom(map_size)][getRandom(map_size)];
-randomCell.blocked = true;
-
-
-// On cree ensuite objet case 
-
-//var Object = new Object();
-
-// cqse peut etre etape ou obstacle
-//      etape peut avoir un bonus : arme
-//chemin = toutes les cases etape pratiquables par tours. 
-// case = arrayElement;
-// if case = true {
-//     for i in (i <= 3, i=coordonnee, i++)
-
-// }
-
+let taille = 10;
+let board = new Board(taille);
+console.log(board.boardSize);
+console.log(board.map[1][2])
+board.printBoard();
