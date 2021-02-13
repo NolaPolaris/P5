@@ -12,12 +12,45 @@ class Board {
   constructor(boardSize){
 
     this.map = new Array(boardSize);
-    
-    for (let x = 0; x < this.map.length; x++) {
-      this.map[x] = new Array(boardSize);
-        for (let y = 0; y < boardSize; y++){
-            this.map[x][y] = new Cell();
-        }
+
+    // On appelle la méthode qui permet d'initialiser la map:
+    this.initializeMap();
+    this.blockRandomCells(10);
+  }
+
+  // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
+  initializeMap() {
+    for (let x = 0; x < this.boardSize; x++) {
+      this.map[x] = new Array(this.boardSize);
+      for (let y = 0; y < this.boardSize; y++) {
+        this.map[x][y] = new Cell();
+      }
+    }
+  }
+
+  // Génération d'un entier aléatoire :
+  getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  };
+
+  // Bloque 10 cellules choisis aleatoirement. 
+  // Attribution d'index aléatoire selon les conditions suivantes : les index doivbent toujours être différents les uns des autres,
+  // les entiers qui les constituent ne doivent pas dépasser 10 (nombre de cases "obastacles")
+  blockRandomCells(qty) {
+    let counter = 0;
+    while(counter < qty) {
+      let randomX = this.getRandomInt(this.boardSize);
+      let randomY = this.getRandomInt(this.boardSize);
+      
+      // on check si la cellule est deja bloquee
+      if (this.map[randomX][randomY].blocked == false) {
+        this.map[randomX][randomY].blocked = true;
+        counter++;
+      }
+      else {
+        // on est tombe sur une cellule deja bloquee, on recommence.
+        continue;
+      }
     }
   }
 
