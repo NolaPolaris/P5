@@ -5,9 +5,9 @@ body {
 
 main {
     height: 100%;
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 }
 
 
@@ -138,7 +138,7 @@ main {
 
 #board .line {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .cell {
@@ -148,4 +148,12 @@ main {
     border: solid 1px #F2F3D9;
 
 
+}
+
+.cell.blocked{
+    background: red;
+}
+
+.cell.path{
+    background: green;
 }
