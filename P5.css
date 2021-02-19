@@ -1,0 +1,151 @@
+body {
+    background: #030027;
+    position: relative;
+}
+
+main {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#rideau {
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.8;
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+#rideau.slide-up {
+
+    top:-100rem;
+    transition: 1s;
+}
+
+#go {
+    height: 2rem;
+    width: 2rem;
+    background: #E84855;
+    border-radius: 99%;
+    cursor: pointer;
+}
+
+#go.shine {
+    animation: shine 1s infinite;
+    background: yellow;
+}
+
+
+@keyframes shine {
+    0% {
+        transform:scale(1.5);
+        transform-origin: center;
+        opacity:0.5;
+        background: #E84855;
+       
+    }
+
+    
+    50% {
+        transform:scale(1.65);
+        transform-origin: center;
+        opacity:0.7;
+        background: yellow;
+    }   
+
+
+    100% {
+        transform:scale(1);
+        transform-origin: center;
+        opacity:1;
+        background: #E84855;
+       
+    }
+
+}
+
+
+
+#go.active {
+    animation: boom 1.5s;
+    opacity: 0;
+    
+}
+
+@keyframes boom {
+    0% {
+        transform:scale(1);
+        transform-origin: center;
+        opacity:1;
+        background: #E84855;
+       
+    }
+
+    75%{
+
+        transform:scale(-1);
+        transform-origin: center;
+        opacity:1;
+        background: #E84855;
+
+    }
+
+
+    100% {
+        transform:scale(15);
+        transform-origin: center;
+        opacity:0;
+        background: yellow;
+       
+    }
+
+}
+
+
+.stars{
+    height: 5px;
+    width: 5px;
+    background:#F2F3D9;
+    opacity: 0.5;
+}
+
+#board.flip-horizontal-bottom {
+
+	-webkit-animation: flip-horizontal-bottom 0.4s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+	        animation: flip-horizontal-bottom 1s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
+
+@keyframes flip-horizontal-bottom {
+    0% {
+      -webkit-transform: rotateX(0);
+              transform: rotateX(0);
+    }
+    100% {
+      -webkit-transform: rotateX(-180deg);
+              transform: rotateX(-180deg);
+    }
+  }
+  
+
+
+#board .line {
+    display: flex;
+    justify-content: center;
+}
+
+.cell {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 1rem;
+    border: solid 1px #F2F3D9;
+
+
+}

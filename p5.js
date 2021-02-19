@@ -1,3 +1,23 @@
+$( document ).ready(function() {
+  $('#go').mouseenter(function(){
+    $(this).addClass('shine')
+  });
+
+  $('#go').mousedown(function(){
+    $(this).removeClass('shine')
+  });
+
+  $('#go').mouseup(function() {
+    $(this).addClass('active'),
+    
+    setTimeout(() => {  $('#rideau').addClass('slide-up'); }, 1700),
+    setTimeout(() => {  $('#board').addClass('flip-horizontal-bottom'); }, 2000)
+    
+  });
+});
+
+
+
 // CLASS CASE
 
 class Cell {
