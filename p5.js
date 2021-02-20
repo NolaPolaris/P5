@@ -5,7 +5,8 @@
 class Cell {
   constructor() {
     this.blocked = false;
-    //this.weapon = "weapon-none"; or 
+    this.weapon = false;
+    this.player = false;
   }
 }
 
@@ -18,6 +19,8 @@ class Board {
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
     this.blockRandomCells(10);
+    this.weaponizedRandomCells(5);
+    this.playerRandomCells(2);
   }
 
   // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
@@ -54,7 +57,43 @@ class Board {
         continue;
       }
     }
-  }
+  };
+
+  weaponizedRandomCells(qty) {
+    let counter = 0;
+    while(counter < qty) {
+      let randomX = this.getRandomInt(this.boardSize);
+      let randomY = this.getRandomInt(this.boardSize);
+      
+      // on check si la cellule est deja bloquee
+      if (this.map[randomX][randomY].blocked == false && this.map[randomX][randomY].weapon == false) {
+        this.map[randomX][randomY].weapon = true;
+        counter++;
+      }
+      else {
+        // on est tombe sur une cellule deja bloquee, on recommence.
+        continue;
+      }
+    }
+  };
+
+  playerRandomCells(qty) {
+    let counter = 0;
+    while(counter < qty) {
+      let randomX = this.getRandomInt(this.boardSize);
+      let randomY = this.getRandomInt(this.boardSize);
+      
+      // on check si la cellule est deja bloquee
+      if (this.map[randomX][randomY].blocked == false && this.map[randomX][randomY].weapon == false && this.map[randomX][randomY].player == false ) {
+        this.map[randomX][randomY].player = true;
+        counter++;
+      }
+      else {
+        // on est tombe sur une cellule deja bloquee, on recommence.
+        continue;
+      }
+    }
+  };
 
   get boardSize() {
     return this.map.length
@@ -78,9 +117,12 @@ class Board {
   printBoard() {
     let plateau = $('#board');
     let timeout = 0;
+  
     for (let y = 0; y < this.boardSize; y++) {
       // create div line
       let line = $('<div></div>').addClass('line');
+      // add data attribute 
+
       // add line to board
       plateau.append(line);
 
@@ -92,6 +134,15 @@ class Board {
         if (this.map[x][y].blocked){
           cell.addClass('blocked');
         }
+
+        else if (this.map[x][y].weapon){
+          cell.addClass('weapon');
+        }
+
+        else if (this.map[x][y].player){
+          cell.addClass('player' + ' ' + 'path');
+        }
+
         else {
           cell.addClass('path');
         }
@@ -112,6 +163,8 @@ $( document ).ready(function() {
   let board = new Board(taille);
   console.log(board.boardSize);
   console.log(board.map[1][2]);
+
+  
 
   board.printLogBoard();
  
