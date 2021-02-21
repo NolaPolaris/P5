@@ -1,3 +1,31 @@
+// praticable  --> le jouer peut se déplacer
+let praticablePath = new Array;
+
+const getA = function(){
+  if (x == 3 && y <= 6){
+    praticablePath.push(map[x][y]);
+  }
+
+  else if (x == 2 && y >=1 &&  y <= 5){
+    praticablePath.push(cell);
+  }
+
+  else if (cell.x == 1 && cell.y >=2 &&  cell.y <= 4){
+    praticablePath.push(cell);
+  }
+
+  else if (cell.x == 0 && cell.y == 3 ){
+    praticablePath.push(cell);
+  }
+
+  else {
+    continue;
+  }
+  
+}
+
+
+
 // CLASS CASE
 
 class Cell {
