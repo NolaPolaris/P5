@@ -10,13 +10,49 @@ class Cell {
     this.x = x;
     this.y = y;
   }
+
+  updateHTML() {
+    let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
+    cell.attr("class", "cell");
+    if (this.blocked) {
+      cell.addClass("blocked");
+    }
+    if (this.weapon) {
+      cell.addClass("weapon");
+    }
+    if (this.player) {
+      cell.addClass("player");
+    }
+  }
+
+  isOccupied() {
+    if (this.blocked || this.weapon || this.player) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+class Player {
+  constructor(x, y) {
+    //this.name = name;
+    this.hp = 10;
+    this.x = x;
+    this.y = y;
+  }
 }
 
 // Creation d'une class board (exercice)
 class Board {
   constructor(boardSize){
 
+    //map = tableau multidimentionel contenant l'ensemble des cellules du plateau
     this.map = new Array(boardSize);
+    //players = tableau contenant les joueurs (objet de type Player)
+    this.players = new Array;
+    this.currentPlayerIndex = 0;
 
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
@@ -68,7 +104,7 @@ class Board {
       let randomY = this.getRandomInt(this.boardSize);
       
       // on check si la cellule est deja bloquee
-      if (this.map[randomX][randomY].blocked == false && this.map[randomX][randomY].weapon == false) {
+      if (!this.map[randomX][randomY].isOccupied()) {
         this.map[randomX][randomY].weapon = true;
         counter++;
       }
@@ -81,13 +117,15 @@ class Board {
 
   playerRandomCells(qty) {
     let counter = 0;
+    
     while(counter < qty) {
       let randomX = this.getRandomInt(this.boardSize);
       let randomY = this.getRandomInt(this.boardSize);
       
       // on check si la cellule est deja bloquee
-      if (this.map[randomX][randomY].blocked == false && this.map[randomX][randomY].weapon == false && this.map[randomX][randomY].player == false ) {
+      if (!this.map[randomX][randomY].isOccupied()) {
         this.map[randomX][randomY].player = true;
+        this.players[counter] = new Player(randomX, randomY);
         counter++;
       }
       else {
@@ -120,9 +158,9 @@ class Board {
         
         //test if range
         if (x == startCell.x && y <= startCell.y + 3 && y >= startCell.y-3){
-          if 
           to_add = true;
         }
+
         if (y == startCell.y && x <= startCell.x + 3 && y >= startCell.x-3){
           to_add = true;
         } 
@@ -143,6 +181,15 @@ class Board {
     //parcours des cells alentours et check si accessble
 
     return accessibleCells;
+  }
+
+  getCurrentPlayer() {
+    return this.players(this.currentPlayerIndex);
+  }
+
+  getPlayerCell(playerIndex) {
+    let player = this.players[playerIndex];
+    return this.map[player.x][player.y];
   }
 
   get boardSize() {
@@ -220,14 +267,19 @@ $( document ).ready(function() {
   let board = new Board(taille);
   console.log(board.boardSize);
   console.log(board.map[1][2]);
-
   
   board.printLogBoard();
-  
+
+
   $('#rideau').addClass('slide-up');
   board.printBoard();
   
-  let start = board.map[3][3];
+  let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
+  console.log(cell_current_player.x + " " + cell_current_player.y);
+  cell_current_player.blocked = true;
+  cell_current_player.updateHTML();
+
+  let start = board.map[3][4];
   let accessibleCells = board.getAccessibleCells(start);
   for(let cell of accessibleCells) {
     $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible")
