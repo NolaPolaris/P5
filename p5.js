@@ -25,6 +25,7 @@ class Cell {
     }
   }
 
+  // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
     if (this.blocked || this.weapon || this.player) {
       return true;
@@ -90,10 +91,6 @@ class Board {
         this.map[randomX][randomY].blocked = true;
         counter++;
       }
-      else {
-        // on est tombe sur une cellule deja bloquee, on recommence.
-        continue;
-      }
     }
   };
 
@@ -123,6 +120,7 @@ class Board {
       let randomY = this.getRandomInt(this.boardSize);
       
       // on check si la cellule est deja bloquee
+      console.log(randomX, randomY, !this.map[randomX][randomY].isOccupied(), counter)
       if (!this.map[randomX][randomY].isOccupied()) {
         this.map[randomX][randomY].player = true;
         this.players[counter] = new Player(randomX, randomY);
@@ -136,9 +134,6 @@ class Board {
   };
 
   // return an array of cells accessible from the "start_cell" parameter [Cell object]
-  // une fonction qui renvoit un tableau de toutes les cellules praticables,
-  //calculées à partir de la variable de type cellule passée en paramètre. 
-  
   getAccessibleCells(startCell){
     let accessibleCells = new Array;
     
@@ -160,7 +155,6 @@ class Board {
         if (x == startCell.x && y <= startCell.y + 3 && y >= startCell.y-3){
           to_add = true;
         }
-
         if (y == startCell.y && x <= startCell.x + 3 && y >= startCell.x-3){
           to_add = true;
         } 
@@ -181,7 +175,53 @@ class Board {
     //parcours des cells alentours et check si accessble
 
     return accessibleCells;
-  }
+  };
+  
+  
+  // getAccessibleCells(startCell){
+  //   let accessibleCells = new Array;
+    
+  //   for (let x = startCell.x - 3 ; x <= startCell.x + 3 ; x++){
+  //     for (let y = startCell.y - 3 ; y <= startCell.y + 3 ; y++){
+  //       let to_add = false;
+
+  //       // test current cell
+  //       if (x == startCell.x && y == startCell.y){
+  //         continue;
+  //       }
+
+  //       // test if blocked
+  //       if (this.map[x][y].isOccupied()) {
+  //         continue;
+  //       }
+        
+  //       // test if range
+  //       if (x == startCell.x && y <= startCell.y + 3 && y >= startCell.y-3){
+  //         to_add = true;
+  //       }
+
+  //       if (y == startCell.y && x <= startCell.x + 3 && y >= startCell.x-3){
+  //         to_add = true;
+  //       } 
+
+  //       // if ((x == startCell.x-1 || x == startCell.x+1)  &&  (y <= startCell.y + 2 && y >= startCell.y-2)){
+  //       //   to_add = true;
+  //       // }
+  //       // if ((x == startCell.x-2 || x == startCell.x+2) && (y <= startCell.y + 1 && y >= startCell.y-1)){
+  //       //   to_add = true;
+  //       // }
+
+  //       if(to_add == true) {
+  //         accessibleCells.push(this.map[x][y]);
+  //       }
+
+  //     }
+  //   }
+
+  //   //parcours des cells alentours et check si accessble
+
+  //   return accessibleCells;
+  // }
 
   getCurrentPlayer() {
     return this.players(this.currentPlayerIndex);
@@ -273,35 +313,40 @@ $( document ).ready(function() {
 
   $('#rideau').addClass('slide-up');
   board.printBoard();
+
+  // à revoir : block la cellule du currentPlayer :
   
   let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
-  console.log(cell_current_player.x + " " + cell_current_player.y);
-  cell_current_player.blocked = true;
-  cell_current_player.updateHTML();
+  console.log(cell_current_player);
+  // console.log(cell_current_player.x + " " + cell_current_player.y);
+  // cell_current_player.blocked = true;
+  // // cell_current_player.updateHTML();
 
-  let start = board.map[3][4];
-  let accessibleCells = board.getAccessibleCells(start);
+  // let start = cell_current_player;
+  let accessibleCells = board.getAccessibleCells(cell_current_player);
   for(let cell of accessibleCells) {
     $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible")
   }
 
   //board.showAccessible(accessibleCells);
 
-  $('#go').mouseenter(function(){
-    $(this).addClass('shine')
-  });
+  // Animation introduction
 
-  $('#go').mousedown(function(){
-    $(this).removeClass('shine')
-  });
+  // $('#go').mouseenter(function(){
+  //   $(this).addClass('shine')
+  // });
 
-  $('#go').mouseup(function() {
-    $(this).addClass('active'),
+  // $('#go').mousedown(function(){
+  //   $(this).removeClass('shine')
+  // });
+
+  // $('#go').mouseup(function() {
+  //   $(this).addClass('active'),
     
-    setTimeout(() => {  $('#rideau').addClass('slide-up'); }, 1700),
-    setTimeout(() => {  board.printBoard();  }, 2000)
+  //   setTimeout(() => {  $('#rideau').addClass('slide-up'); }, 1700),
+  //   setTimeout(() => {  board.printBoard();  }, 2000)
 
-  });
+  // });
 
 
 });

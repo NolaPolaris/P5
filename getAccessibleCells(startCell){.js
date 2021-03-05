@@ -17,7 +17,6 @@ getAccessibleCells(startCell){
         
         //test if range
         if (x == startCell.x && y <= startCell.y + 3 && y >= startCell.y-3){
-          if 
           to_add = true;
         }
         if (y == startCell.y && x <= startCell.x + 3 && y >= startCell.x-3){
@@ -40,4 +39,4 @@ getAccessibleCells(startCell){
     //parcours des cells alentours et check si accessble
 
     return accessibleCells;
-  }
+  };
