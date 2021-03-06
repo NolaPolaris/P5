@@ -173,7 +173,14 @@ main {
 
 }
 
-.cell.accessible {
-   
+.cell.accessible{
+    background: lawngreen;
+    transition: 0.2s;
+    
+
+}
+
+.cell.accessible:hover {
+    border:solid 3px yellow;
     background: lawngreen;
 }

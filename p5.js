@@ -10,7 +10,7 @@ class Cell {
     this.x = x;
     this.y = y;
   }
-
+  
   updateHTML() {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
     cell.attr("class", "cell");
@@ -24,7 +24,7 @@ class Cell {
       cell.addClass("player");
     }
   }
-
+  
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
     if (this.blocked || this.weapon || this.player) {
@@ -48,20 +48,20 @@ class Player {
 // Creation d'une class board (exercice)
 class Board {
   constructor(boardSize){
-
+    
     //map = tableau multidimentionel contenant l'ensemble des cellules du plateau
     this.map = new Array(boardSize);
     //players = tableau contenant les joueurs (objet de type Player)
     this.players = new Array;
     this.currentPlayerIndex = 0;
-
+    
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
     this.blockRandomCells(10);
     this.weaponizedRandomCells(5);
     this.playerRandomCells(2);
   }
-
+  
   // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
   initializeMap() {
     for (let x = 0; x < this.boardSize; x++) {
@@ -71,12 +71,12 @@ class Board {
       }
     }
   }
-
+  
   // Génération d'un entier aléatoire :
   getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
   };
-
+  
   // Bloque 10 cellules choisis aleatoirement. 
   // Attribution d'index aléatoire selon les conditions suivantes : les index doivbent toujours être différents les uns des autres,
   // les entiers qui les constituent ne doivent pas dépasser 10 (nombre de cases "obastacles")
@@ -93,7 +93,7 @@ class Board {
       }
     }
   };
-
+  
   weaponizedRandomCells(qty) {
     let counter = 0;
     while(counter < qty) {
@@ -111,7 +111,7 @@ class Board {
       }
     }
   };
-
+  
   playerRandomCells(qty) {
     let counter = 0;
     
@@ -132,110 +132,86 @@ class Board {
       }
     }
   };
-
+  
   // return an array of cells accessible from the "start_cell" parameter [Cell object]
   getAccessibleCells(startCell){
     let accessibleCells = new Array;
     
-    for (let x = startCell.x - 3 ; x <= startCell.x + 3 ; x++){
-      for (let y = startCell.y - 3 ; y <= startCell.y + 3 ; y++){
-        let to_add = false;
+    for (let x = startCell.x+1 ; x <= startCell.x + 3 ; x++){
+      //on balise les boucles pour éviter de sortir de la map et remonhter une erreur
 
-        // test current cell
-        if (x == startCell.x && y == startCell.y){
-          continue;
-        }
+      if (x >= this.map.length-1){
+        break;
+      }
 
-        // test if blocked
-        if (this.map[x][y].blocked == true) {
-          continue;
-        }
-        
-        //test if range
-        if (x == startCell.x && y <= startCell.y + 3 && y >= startCell.y-3){
-          to_add = true;
-        }
-        if (y == startCell.y && x <= startCell.x + 3 && y >= startCell.x-3){
-          to_add = true;
-        } 
-        if ((x == startCell.x-1 || x == startCell.x+1)  &&  (y <= startCell.y + 2 && y >= startCell.y-2)){
-          to_add = true;
-        }
-        if ((x == startCell.x-2 || x == startCell.x+2) && (y <= startCell.y + 1 && y >= startCell.y-1)){
-          to_add = true;
-        }
+      //on peut aussi utiliser cette manière d'écrire, ou intégrer cette condition dans le second argument de notre boucle for:
 
-        if(to_add == true) {
-          accessibleCells.push(this.map[x][y]);
-        }
+      // if (this.map.length <= x){
+      //   break;
+      // }
 
+      let y = startCell.y;
+      
+      if(this.map[x][y].blocked == false) {
+        accessibleCells.push(this.map[x][y]);
+      } else {
+        break;
       }
     }
-
-    //parcours des cells alentours et check si accessble
-
-    return accessibleCells;
-  };
-  
-  
-  // getAccessibleCells(startCell){
-  //   let accessibleCells = new Array;
     
-  //   for (let x = startCell.x - 3 ; x <= startCell.x + 3 ; x++){
-  //     for (let y = startCell.y - 3 ; y <= startCell.y + 3 ; y++){
-  //       let to_add = false;
+    for (let x = startCell.x-1 ; x >= startCell.x - 3 ; x--){
+      let y = startCell.y;
 
-  //       // test current cell
-  //       if (x == startCell.x && y == startCell.y){
-  //         continue;
-  //       }
+      if (x >= this.map.length-1 || x < 0){
+        break;
+      }
+      
+      if(this.map[x][y].blocked == false) {
+        accessibleCells.push(this.map[x][y]);
+      } else {
+        break;
+      }
+    };
 
-  //       // test if blocked
-  //       if (this.map[x][y].isOccupied()) {
-  //         continue;
-  //       }
-        
-  //       // test if range
-  //       if (x == startCell.x && y <= startCell.y + 3 && y >= startCell.y-3){
-  //         to_add = true;
-  //       }
+    for (let y = startCell.y+1 ; y <= startCell.y + 3 ; y++){
+      let x = startCell.x;
+      if (y >= this.map.length-1){
+        break;
+      }
+      if(this.map[x][y].blocked == false) {
+        accessibleCells.push(this.map[x][y]);
+      } else {
+        break;
+      }
+    };
 
-  //       if (y == startCell.y && x <= startCell.x + 3 && y >= startCell.x-3){
-  //         to_add = true;
-  //       } 
-
-  //       // if ((x == startCell.x-1 || x == startCell.x+1)  &&  (y <= startCell.y + 2 && y >= startCell.y-2)){
-  //       //   to_add = true;
-  //       // }
-  //       // if ((x == startCell.x-2 || x == startCell.x+2) && (y <= startCell.y + 1 && y >= startCell.y-1)){
-  //       //   to_add = true;
-  //       // }
-
-  //       if(to_add == true) {
-  //         accessibleCells.push(this.map[x][y]);
-  //       }
-
-  //     }
-  //   }
-
-  //   //parcours des cells alentours et check si accessble
-
-  //   return accessibleCells;
-  // }
-
+    for (let y = startCell.y-1 ; y >= startCell.y - 3 ; y--){
+      let x = startCell.x;
+      if (y >= this.map.length-1 || y < 0){
+        break;
+      }
+      if(this.map[x][y].blocked == false) {
+        accessibleCells.push(this.map[x][y]);
+      } else {
+        break;
+      }
+    };
+    return accessibleCells;
+  } 
+  
   getCurrentPlayer() {
     return this.players(this.currentPlayerIndex);
   }
-
+  
   getPlayerCell(playerIndex) {
     let player = this.players[playerIndex];
     return this.map[player.x][player.y];
   }
-
+  
   get boardSize() {
     return this.map.length
   }
-
+  
   printLogBoard() {
     for (let y = 0; y < this.boardSize; y++) {
       let line = "";
@@ -250,42 +226,42 @@ class Board {
       console.log(line);
     }
   }
-
+  
   printBoard() {
     let plateau = $('#board');
     let timeout = 0;
-  
+    
     for (let y = 0; y < this.boardSize; y++) {
       // create div line
       let line = $('<div></div>').addClass('line').attr('line-index', y);
       // add data attribute 
       
-
+      
       // add line to board
       plateau.append(line);
-
+      
       for (let x = 0; x < this.boardSize; x++) {
-         // create span cell
-         let cell = $('<span></span>').addClass('cell');
-         let coordonnate ={
+        // create span cell
+        let cell = $('<span></span>').addClass('cell');
+        let coordonnate ={
           'data-x': x, 
           'data-y': y
         }
         cell.attr(coordonnate);
-
+        
         // add style dedending state of cell
         if (this.map[x][y].blocked){
           cell.addClass('blocked');
         }
-
+        
         else if (this.map[x][y].weapon){
           cell.addClass('weapon');
         }
-
+        
         else if (this.map[x][y].player){
           cell.addClass('player' + ' ' + 'path');
         }
-
+        
         else {
           cell.addClass('path');
         }
@@ -309,11 +285,11 @@ $( document ).ready(function() {
   console.log(board.map[1][2]);
   
   board.printLogBoard();
-
-
+  
+  
   $('#rideau').addClass('slide-up');
   board.printBoard();
-
+  
   // à revoir : block la cellule du currentPlayer :
   
   let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
@@ -321,32 +297,33 @@ $( document ).ready(function() {
   // console.log(cell_current_player.x + " " + cell_current_player.y);
   // cell_current_player.blocked = true;
   // // cell_current_player.updateHTML();
-
+  
   // let start = cell_current_player;
   let accessibleCells = board.getAccessibleCells(cell_current_player);
+  console.log(accessibleCells);
   for(let cell of accessibleCells) {
     $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible")
   }
-
+  
   //board.showAccessible(accessibleCells);
-
+  
   // Animation introduction
-
+  
   // $('#go').mouseenter(function(){
   //   $(this).addClass('shine')
   // });
-
+  
   // $('#go').mousedown(function(){
   //   $(this).removeClass('shine')
   // });
-
+  
   // $('#go').mouseup(function() {
   //   $(this).addClass('active'),
-    
+  
   //   setTimeout(() => {  $('#rideau').addClass('slide-up'); }, 1700),
   //   setTimeout(() => {  board.printBoard();  }, 2000)
-
+  
   // });
-
-
+  
+  
 });
