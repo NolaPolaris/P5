@@ -24,7 +24,6 @@ class Cell {
       cell.addClass("player");
     }
   }
-  
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
     if (this.blocked || this.weapon || this.player) {
@@ -45,7 +44,7 @@ class Player {
   }
 }
 
-// Creation d'une class board (exercice)
+// Creation d'une class board 
 class Board {
   constructor(boardSize){
     
@@ -71,6 +70,7 @@ class Board {
       }
     }
   }
+
   
   // Génération d'un entier aléatoire :
   getRandomInt(max) {
@@ -290,19 +290,17 @@ $( document ).ready(function() {
   $('#rideau').addClass('slide-up');
   board.printBoard();
   
-  // à revoir : block la cellule du currentPlayer :
-  
   let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
   console.log(cell_current_player);
+  
   // console.log(cell_current_player.x + " " + cell_current_player.y);
-  // cell_current_player.blocked = true;
   // // cell_current_player.updateHTML();
   
-  // let start = cell_current_player;
   let accessibleCells = board.getAccessibleCells(cell_current_player);
   console.log(accessibleCells);
   for(let cell of accessibleCells) {
-    $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible")
+    $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible");
+    
   }
   
   //board.showAccessible(accessibleCells);
