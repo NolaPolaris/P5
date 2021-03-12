@@ -33,6 +33,13 @@ class Cell {
       return false;
     }
   }
+
+  // isSelected(){
+  //   let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
+  //   cell.dblclick(function(){
+  //     console.log(cell);
+  //   })
+  // }
 }
 
 class Player {
@@ -42,6 +49,16 @@ class Player {
     this.x = x;
     this.y = y;
   }
+
+  isSelected(){
+    let player = board.map[player.x][player.y];
+    player.addEventListener('click', function(){
+      console.log(this.x, this.y);
+    })
+
+  }
+
+  
 }
 
 // Creation d'une class board 
@@ -59,6 +76,7 @@ class Board {
     this.blockRandomCells(10);
     this.weaponizedRandomCells(5);
     this.playerRandomCells(2);
+  
   }
   
   // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
@@ -71,7 +89,6 @@ class Board {
     }
   }
 
-  
   // Génération d'un entier aléatoire :
   getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
@@ -138,20 +155,16 @@ class Board {
     let accessibleCells = new Array;
     
     for (let x = startCell.x+1 ; x <= startCell.x + 3 ; x++){
-      //on balise les boucles pour éviter de sortir de la map et remonhter une erreur
-
-      if (x >= this.map.length-1){
+      //on balise les boucles pour éviter de sortir de la map et remonter une erreur
+      if (x >= this.map.length){
         break;
       }
-
       //on peut aussi utiliser cette manière d'écrire, ou intégrer cette condition dans le second argument de notre boucle for:
 
       // if (this.map.length <= x){
       //   break;
       // }
-
       let y = startCell.y;
-      
       if(this.map[x][y].blocked == false) {
         accessibleCells.push(this.map[x][y]);
       } else {
@@ -162,7 +175,7 @@ class Board {
     for (let x = startCell.x-1 ; x >= startCell.x - 3 ; x--){
       let y = startCell.y;
 
-      if (x >= this.map.length-1 || x < 0){
+      if (x >= this.map.length || x < 0){
         break;
       }
       
@@ -234,9 +247,6 @@ class Board {
     for (let y = 0; y < this.boardSize; y++) {
       // create div line
       let line = $('<div></div>').addClass('line').attr('line-index', y);
-      // add data attribute 
-      
-      
       // add line to board
       plateau.append(line);
       
@@ -247,8 +257,12 @@ class Board {
           'data-x': x, 
           'data-y': y
         }
+
+        cell.click(function() {
+          console.log(coordonnate)
+        });
         cell.attr(coordonnate);
-        
+              
         // add style dedending state of cell
         if (this.map[x][y].blocked){
           cell.addClass('blocked');
@@ -283,7 +297,6 @@ $( document ).ready(function() {
   let board = new Board(taille);
   console.log(board.boardSize);
   console.log(board.map[1][2]);
-  
   board.printLogBoard();
   
   
@@ -291,16 +304,35 @@ $( document ).ready(function() {
   board.printBoard();
   
   let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
-  console.log(cell_current_player);
+  
   
   // console.log(cell_current_player.x + " " + cell_current_player.y);
   // // cell_current_player.updateHTML();
   
   let accessibleCells = board.getAccessibleCells(cell_current_player);
   console.log(accessibleCells);
+  let clickcount = 0;
+  
+
   for(let cell of accessibleCells) {
     $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible");
-    
+   
+    // $("[data-x="+cell.x+"][data-y="+cell.y+"]").click(function(){
+    //   console.log(cell.x, cell.y);
+    //   console.log(cell_current_player.x, cell_current_player.y);
+    // })
+
+
+    $("[data-x="+cell.x+"][data-y="+cell.y+"]").dblclick(function(){
+      clickcount = clickcount + 1;
+      console.log('et voici encore' + clickcount + 'click');
+      $("[data-x=" + cell_current_player.x + "][data-y=" + cell_current_player.y + "]").removeClass('player');
+      cell_current_player.x = cell.x;
+      cell_current_player.y = cell.y;
+      
+      $(this).addClass('player');
+      console.log(cell_current_player.x, cell_current_player.y);
+    })      
   }
   
   //board.showAccessible(accessibleCells);
