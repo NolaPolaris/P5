@@ -16,6 +16,9 @@ class Cell {
     cell.attr("class", "cell");
     if (this.blocked) {
       cell.addClass("blocked");
+    } else {
+      cell.addClass("path");
+
     }
     if (this.weapon) {
       cell.addClass("weapon");
@@ -53,13 +56,47 @@ class Player {
   isSelected(){
     let player = board.map[player.x][player.y];
     player.addEventListener('click', function(){
-      console.log(this.x, this.y);
+      console.log(this.x, this.y + "Ce jouer est selectionne");
     })
 
   }
+}
+
+function move(event){
+  let board = event.data.board;
+  let span = event.target; // ici this == event.target car c'est à lui qu'est bindé l'event click. 
+  console.log(span)
+  // 1. recuperer la cell js
+  let x = span.getAttribute('data-x');
+  console.log(x);
+  let y = span.getAttribute('data-y');
+  console.log(y);
+  let targetCell = board.map[x][y];
+  console.log(targetCell);
+  let currentPlayer = board.getCurrentPlayer();
+  console.log(currentPlayer);
+  let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
+  console.log(currentPlayerCell);
+  let accessibleCells = board.getAccessibleCells(currentPlayerCell);
+  console.log(accessibleCells);
+  if (accessibleCells.indexOf(targetCell) == -1){
+    alert("NIQUE TOI");
+    return;
+  }
+  console.log('La cellule est accessible !')
+  currentPlayer.x = targetCell.x;
+  currentPlayer.y = targetCell.y;
+  currentPlayerCell.player = false;
+  currentPlayerCell.updateHTML();
+  targetCell.player = true;
+  targetCell.updateHTML();
 
   
-}
+  // 2. recuperer le joueur courant et sa cell
+  // 3. verifier que le joueur peut aller sur la cell cliquee
+  // 4. si oui, deplacer joueur dans data JS et update html
+  // 4.bis si non, alert action impossible
+ }
 
 // Creation d'une class board 
 class Board {
@@ -70,6 +107,7 @@ class Board {
     //players = tableau contenant les joueurs (objet de type Player)
     this.players = new Array;
     this.currentPlayerIndex = 0;
+
     
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
@@ -159,11 +197,6 @@ class Board {
       if (x >= this.map.length){
         break;
       }
-      //on peut aussi utiliser cette manière d'écrire, ou intégrer cette condition dans le second argument de notre boucle for:
-
-      // if (this.map.length <= x){
-      //   break;
-      // }
       let y = startCell.y;
       if(this.map[x][y].blocked == false) {
         accessibleCells.push(this.map[x][y]);
@@ -188,7 +221,7 @@ class Board {
 
     for (let y = startCell.y+1 ; y <= startCell.y + 3 ; y++){
       let x = startCell.x;
-      if (y >= this.map.length-1){
+      if (y >= this.map.length){
         break;
       }
       if(this.map[x][y].blocked == false) {
@@ -213,7 +246,7 @@ class Board {
   } 
   
   getCurrentPlayer() {
-    return this.players(this.currentPlayerIndex);
+    return this.players[this.currentPlayerIndex];
   }
   
   getPlayerCell(playerIndex) {
@@ -225,21 +258,7 @@ class Board {
     return this.map.length
   }
   
-  printLogBoard() {
-    for (let y = 0; y < this.boardSize; y++) {
-      let line = "";
-      for (let x = 0; x < this.boardSize; x++) {
-        if (this.map[x][y].blocked){
-          line += "[ X ]";
-        }
-        else {
-          line += `[${x},${y}]`
-        }
-      }
-      console.log(line);
-    }
-  }
-  
+
   printBoard() {
     let plateau = $('#board');
     let timeout = 0;
@@ -257,28 +276,26 @@ class Board {
           'data-x': x, 
           'data-y': y
         }
-
-        cell.click(function() {
-          console.log(coordonnate)
-        });
+        
+        cell.click({board: this}, move);
         cell.attr(coordonnate);
               
         // add style dedending state of cell
         if (this.map[x][y].blocked){
           cell.addClass('blocked');
+        } else {
+          cell.addClass('path');
         }
         
-        else if (this.map[x][y].weapon){
+        if (this.map[x][y].weapon){
           cell.addClass('weapon');
         }
         
-        else if (this.map[x][y].player){
-          cell.addClass('player' + ' ' + 'path');
+        if (this.map[x][y].player){
+          cell.addClass('player');
         }
         
-        else {
-          cell.addClass('path');
-        }
+
         
         // add cell to line
         line.append(cell);
@@ -290,22 +307,19 @@ class Board {
 }
 
 
-
-
 $( document ).ready(function() {
   let taille = 10;
   let board = new Board(taille);
   console.log(board.boardSize);
   console.log(board.map[1][2]);
-  board.printLogBoard();
+  // board.printLogBoard();
   
   
   $('#rideau').addClass('slide-up');
   board.printBoard();
   
   let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
-  
-  
+   
   // console.log(cell_current_player.x + " " + cell_current_player.y);
   // // cell_current_player.updateHTML();
   
@@ -316,24 +330,25 @@ $( document ).ready(function() {
 
   for(let cell of accessibleCells) {
     $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible");
-   
-    // $("[data-x="+cell.x+"][data-y="+cell.y+"]").click(function(){
-    //   console.log(cell.x, cell.y);
-    //   console.log(cell_current_player.x, cell_current_player.y);
-    // })
-
-
-    $("[data-x="+cell.x+"][data-y="+cell.y+"]").dblclick(function(){
-      clickcount = clickcount + 1;
-      console.log('et voici encore' + clickcount + 'click');
-      $("[data-x=" + cell_current_player.x + "][data-y=" + cell_current_player.y + "]").removeClass('player');
-      cell_current_player.x = cell.x;
-      cell_current_player.y = cell.y;
-      
-      $(this).addClass('player');
-      console.log(cell_current_player.x, cell_current_player.y);
-    })      
   }
+  //   // lE SECRIPT SUIVANT FONCTIONNE MAIS / degueu
+
+  //   $("[data-x="+cell.x+"][data-y="+cell.y+"]").dblclick(function(){
+  //     clickcount = clickcount + 1;
+  //     console.log('et voici encore' + clickcount + 'click');
+  //     $("[data-x=" + cell_current_player.x + "][data-y=" + cell_current_player.y + "]").removeClass('player');
+  //     cell_current_player.x = cell.x;
+  //     cell_current_player.y = cell.y;
+      
+  //     $(this).addClass('player');
+  //     console.log(cell_current_player.x, cell_current_player.y);
+  //     board.currentPlayerIndex = 1;
+  //     cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
+
+  //   });
+    
+
+  // }
   
   //board.showAccessible(accessibleCells);
   

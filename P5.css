@@ -155,8 +155,13 @@ main {
     background: red;
 }
 
-.cell.weapon {
-    background: blue;
+.cell.weapon:before {
+    content: "";
+    position: absolute;
+    width: 3rem;
+    height: 1rem;
+    border-radius: 99%;
+    border: 2px solid blue;
 }
 
 .cell.path{

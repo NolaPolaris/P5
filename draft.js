@@ -117,3 +117,19 @@ randomCell.blocked = true;
 
 // }
 
+// Print map dans la consKole 
+
+printLogBoard() {
+  for (let y = 0; y < this.boardSize; y++) {
+    let line = "";
+    for (let x = 0; x < this.boardSize; x++) {
+      if (this.map[x][y].blocked){
+        line += "[ X ]";
+      }
+      else {
+        line += `[${x},${y}]`
+      }
+    }
+    console.log(line);
+  }
+}
