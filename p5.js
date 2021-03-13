@@ -90,6 +90,8 @@ function move(event){
   currentPlayerCell.updateHTML();
   targetCell.player = true;
   targetCell.updateHTML();
+  board.switchCurrentPlayer();
+
 
   
   // 2. recuperer le joueur courant et sa cell
@@ -249,6 +251,14 @@ class Board {
     return this.players[this.currentPlayerIndex];
   }
   
+  switchCurrentPlayer(){
+    if(this.currentPlayerIndex == 0){
+      this.currentPlayerIndex = 1;
+    }else{
+      this.currentPlayerIndex = 0;
+    }
+  }
+
   getPlayerCell(playerIndex) {
     let player = this.players[playerIndex];
     return this.map[player.x][player.y];
@@ -331,28 +341,8 @@ $( document ).ready(function() {
   for(let cell of accessibleCells) {
     $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible");
   }
-  //   // lE SECRIPT SUIVANT FONCTIONNE MAIS / degueu
-
-  //   $("[data-x="+cell.x+"][data-y="+cell.y+"]").dblclick(function(){
-  //     clickcount = clickcount + 1;
-  //     console.log('et voici encore' + clickcount + 'click');
-  //     $("[data-x=" + cell_current_player.x + "][data-y=" + cell_current_player.y + "]").removeClass('player');
-  //     cell_current_player.x = cell.x;
-  //     cell_current_player.y = cell.y;
-      
-  //     $(this).addClass('player');
-  //     console.log(cell_current_player.x, cell_current_player.y);
-  //     board.currentPlayerIndex = 1;
-  //     cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
-
-  //   });
-    
-
-  // }
   
-  //board.showAccessible(accessibleCells);
-  
-  // Animation introduction
+  //A GARDER Animation introduction
   
   // $('#go').mouseenter(function(){
   //   $(this).addClass('shine')
