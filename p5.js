@@ -18,7 +18,6 @@ class Cell {
       cell.addClass("blocked");
     } else {
       cell.addClass("path");
-
     }
     if (this.weapon) {
       cell.addClass("weapon");
@@ -52,14 +51,6 @@ class Player {
     this.x = x;
     this.y = y;
   }
-
-  isSelected(){
-    let player = board.map[player.x][player.y];
-    player.addEventListener('click', function(){
-      console.log(this.x, this.y + "Ce jouer est selectionne");
-    })
-
-  }
 }
 
 function move(event){
@@ -73,17 +64,23 @@ function move(event){
   console.log(y);
   let targetCell = board.map[x][y];
   console.log(targetCell);
+
+    // CONSOLE 
   let currentPlayer = board.getCurrentPlayer();
   console.log(currentPlayer);
+  //CONSOLE
   let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
   console.log(currentPlayerCell);
+  //DOM
+
   let accessibleCells = board.getAccessibleCells(currentPlayerCell);
   console.log(accessibleCells);
+  
   if (accessibleCells.indexOf(targetCell) == -1){
-    alert("NIQUE TOI");
+    alert("Not your turn baby");
     return;
   }
-  console.log('La cellule est accessible !')
+
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
   currentPlayerCell.player = false;
@@ -91,6 +88,8 @@ function move(event){
   targetCell.player = true;
   targetCell.updateHTML();
   board.switchCurrentPlayer();
+  board.getAccessibleCells(currentPlayerCell);
+  
 
 
   
@@ -245,6 +244,7 @@ class Board {
       }
     };
     return accessibleCells;
+  
   } 
   
   getCurrentPlayer() {
@@ -305,8 +305,6 @@ class Board {
           cell.addClass('player');
         }
         
-
-        
         // add cell to line
         line.append(cell);
         //setTimeout(() => { line.append(cell); }, timeout);
@@ -327,21 +325,7 @@ $( document ).ready(function() {
   
   $('#rideau').addClass('slide-up');
   board.printBoard();
-  
-  let cell_current_player = board.getPlayerCell(board.currentPlayerIndex)
-   
-  // console.log(cell_current_player.x + " " + cell_current_player.y);
-  // // cell_current_player.updateHTML();
-  
-  let accessibleCells = board.getAccessibleCells(cell_current_player);
-  console.log(accessibleCells);
-  let clickcount = 0;
-  
 
-  for(let cell of accessibleCells) {
-    $("[data-x="+cell.x+"][data-y="+cell.y+"]").addClass("accessible");
-  }
-  
   //A GARDER Animation introduction
   
   // $('#go').mouseenter(function(){

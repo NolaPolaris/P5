@@ -189,3 +189,15 @@ main {
     border:solid 3px yellow;
     background: lawngreen;
 }
+
+.cell.player.currentPlayer::after {
+    content: "";
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 99%;
+    border: 2px solid violet;
+    transition: 0.2s;
+
+} 
+
