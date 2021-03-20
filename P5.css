@@ -171,11 +171,12 @@ main {
 .cell.player::after {
     content: "";
     position: absolute;
-    width: 1rem;
+    width: 4rem;
     height: 1rem;
+    left: 50%;
+    transform: translate(-50%);
     border-radius: 99%;
-    border: 2px solid violet;
-
+    
 }
 
 .cell.accessible{
@@ -190,14 +191,20 @@ main {
     background: lawngreen;
 }
 
-.cell.player.currentPlayer::after {
-    content: "";
+.player-{
     position: absolute;
-    width: 2rem;
-    height: 2rem;
+    width: 4rem;
+    height: 1rem;
+    left: 50%;
+    background: khaki;
+    transform: translate(-50%);
     border-radius: 99%;
-    border: 2px solid violet;
-    transition: 0.2s;
+    box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34);
+    -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34);
+    -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34); ;
+}
 
-} 
+.player-:after{
+    content:attr(data-x);
 
+}

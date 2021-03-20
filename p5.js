@@ -13,18 +13,27 @@ class Cell {
   
   updateHTML() {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
+    let jojo = $('<span></span>').addClass('player-');
+    // let currentIndex = Board.players[currentPlayerIndex];
     cell.attr("class", "cell");
     if (this.blocked) {
       cell.addClass("blocked");
     } else {
       cell.addClass("path");
+      
     }
     if (this.weapon) {
       cell.addClass("weapon");
     }
     if (this.player) {
-      cell.addClass("player");
+      cell.addClass('player'); 
+      cell.prepend(jojo);      
+    } else{
+      $(".cell").children(".player-").remove();
     }
+    // if(this.player == currentIndex){
+    //   player.addClass('player-' + currentIndex);
+    // }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
@@ -287,6 +296,7 @@ class Board {
           'data-y': y
         }
         
+        let currentPlayer = this.players[this.currentPlayerIndex]
         cell.click({board: this}, move);
         cell.attr(coordonnate);
               
@@ -302,8 +312,13 @@ class Board {
         }
         
         if (this.map[x][y].player){
-          cell.addClass('player');
+          let jojo = $('<span></span>').addClass('player-');
+          cell.addClass('player'); 
+          cell.prepend(jojo);      
         }
+
+        
+        
         
         // add cell to line
         line.append(cell);
