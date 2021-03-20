@@ -7,20 +7,24 @@ class Cell {
     this.blocked = false;
     this.weapon = false;
     this.player = false;
+    // this.player = {
+    //   none:"none",
+    //   current:"current",
+    //   second:"second"
+    // };
     this.x = x;
     this.y = y;
   }
   
   updateHTML() {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
-    let jojo = $('<span></span>').addClass('player-');
-    // let currentIndex = Board.players[currentPlayerIndex];
+    let jojo = $('<span></span>').addClass('player-jojo');
+    let currentIndex = Board.players[currentPlayerIndex];
     cell.attr("class", "cell");
     if (this.blocked) {
       cell.addClass("blocked");
     } else {
       cell.addClass("path");
-      
     }
     if (this.weapon) {
       cell.addClass("weapon");
@@ -28,16 +32,19 @@ class Cell {
     if (this.player) {
       cell.addClass('player'); 
       cell.prepend(jojo);      
-    } else{
-      $(".cell").children(".player-").remove();
-    }
+    } 
+
+
+
+    
+    
     // if(this.player == currentIndex){
     //   player.addClass('player-' + currentIndex);
     // }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
-    if (this.blocked || this.weapon || this.player) {
+    if (this.blocked || this.weapon || this.player.current || this.player.second) {
       return true;
     }
     else {
@@ -295,8 +302,7 @@ class Board {
           'data-x': x, 
           'data-y': y
         }
-        
-        let currentPlayer = this.players[this.currentPlayerIndex]
+
         cell.click({board: this}, move);
         cell.attr(coordonnate);
               
@@ -312,10 +318,17 @@ class Board {
         }
         
         if (this.map[x][y].player){
-          let jojo = $('<span></span>').addClass('player-');
+          let jojo = $('<span></span>').addClass('player-jojo');
           cell.addClass('player'); 
           cell.prepend(jojo);      
         }
+
+        if (this.map[x][y].current){
+          let juju = $('<span></span>').addClass('player-juju');
+          cell.addClass('player'); 
+          cell.prepend(juju);      
+        }
+
 
         
         
@@ -326,6 +339,13 @@ class Board {
         //timeout += 20;
       }
     }
+
+    let currentPlayer = this.players[this.currentPlayerIndex];
+    console.log(currentPlayer);
+    let currentPlayerCell = this.map[currentPlayer.x][currentPlayer.y];
+    currentPlayerCell.current = true;
+    console.log("le joueur courant est maintenant");
+    console.log(currentPlayerCell);    
   }
 }
 

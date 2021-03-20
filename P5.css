@@ -191,7 +191,7 @@ main {
     background: lawngreen;
 }
 
-.player-{
+.player-jojo{
     position: absolute;
     width: 4rem;
     height: 1rem;
@@ -204,7 +204,16 @@ main {
     -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34); ;
 }
 
-.player-:after{
-    content:attr(data-x);
+.player-jojo.current:after {
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
+    content: "A moi de jouer !";
+}
 
+.player-jojo.second {
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
+    content: "En attente d'action";
 }
