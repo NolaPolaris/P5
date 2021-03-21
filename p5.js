@@ -15,6 +15,8 @@ class Cell {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
 
     cell.attr("class", "cell");
+    cell.empty(); 
+
     if (this.blocked) {
       cell.addClass("blocked");
     } else {
@@ -25,7 +27,9 @@ class Cell {
       cell.addClass("weapon");
     }
     if (this.player != null) {
-      cell.addClass('player-'+ this.player); 
+      let player = $("<span></span>");
+      player.addClass('player-'+ this.player); 
+      cell.append(player)
     }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
@@ -52,6 +56,7 @@ class Player {
     this.hp = 10;
     this.x = x;
     this.y = y;
+    this.weapon = null;
   }
 }
 
@@ -97,6 +102,8 @@ function move(event){
   // 4. si oui, deplacer joueur dans data JS et update html
   // 4.bis si non, alert action impossible
  }
+
+
 
 // Creation d'une class board 
 class Board {
@@ -198,7 +205,7 @@ class Board {
         break;
       }
       let y = startCell.y;
-      if(this.map[x][y].blocked == false) {
+      if(this.map[x][y].blocked == false && this.map[x][y].player==null) {
         accessibleCells.push(this.map[x][y]);
       } else {
         break;
@@ -212,7 +219,7 @@ class Board {
         break;
       }
       
-      if(this.map[x][y].blocked == false) {
+      if(this.map[x][y].blocked == false && this.map[x][y].player==null) {
         accessibleCells.push(this.map[x][y]);
       } else {
         break;
@@ -224,7 +231,7 @@ class Board {
       if (y >= this.map.length){
         break;
       }
-      if(this.map[x][y].blocked == false) {
+      if(this.map[x][y].blocked == false && this.map[x][y].player==null) {
         accessibleCells.push(this.map[x][y]);
       } else {
         break;
@@ -236,7 +243,7 @@ class Board {
       if (y >= this.map.length-1 || y < 0){
         break;
       }
-      if(this.map[x][y].blocked == false) {
+      if(this.map[x][y].blocked == false && this.map[x][y].player==null) {
         accessibleCells.push(this.map[x][y]);
       } else {
         break;
