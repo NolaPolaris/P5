@@ -6,45 +6,31 @@ class Cell {
   constructor(x, y) {
     this.blocked = false;
     this.weapon = false;
-    this.player = false;
-    // this.player = {
-    //   none:"none",
-    //   current:"current",
-    //   second:"second"
-    // };
+    this.player = null;
     this.x = x;
     this.y = y;
   }
   
   updateHTML() {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
-    let jojo = $('<span></span>').addClass('player-jojo');
-    let currentIndex = Board.players[currentPlayerIndex];
+
     cell.attr("class", "cell");
     if (this.blocked) {
       cell.addClass("blocked");
     } else {
       cell.addClass("path");
+      
     }
     if (this.weapon) {
       cell.addClass("weapon");
     }
-    if (this.player) {
-      cell.addClass('player'); 
-      cell.prepend(jojo);      
-    } 
-
-
-
-    
-    
-    // if(this.player == currentIndex){
-    //   player.addClass('player-' + currentIndex);
-    // }
+    if (this.player != null) {
+      cell.addClass('player-'+ this.player); 
+    }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
-    if (this.blocked || this.weapon || this.player.current || this.player.second) {
+    if (this.blocked || this.weapon || this.player != null) {
       return true;
     }
     else {
@@ -93,21 +79,18 @@ function move(event){
   console.log(accessibleCells);
   
   if (accessibleCells.indexOf(targetCell) == -1){
-    alert("Not your turn baby");
+    alert("Not accessible!");
     return;
   }
 
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
-  currentPlayerCell.player = false;
+  currentPlayerCell.player = null;
   currentPlayerCell.updateHTML();
-  targetCell.player = true;
+  targetCell.player = board.currentPlayerIndex;
   targetCell.updateHTML();
   board.switchCurrentPlayer();
   board.getAccessibleCells(currentPlayerCell);
-  
-
-
   
   // 2. recuperer le joueur courant et sa cell
   // 3. verifier que le joueur peut aller sur la cell cliquee
@@ -194,7 +177,7 @@ class Board {
       // on check si la cellule est deja bloquee
       console.log(randomX, randomY, !this.map[randomX][randomY].isOccupied(), counter)
       if (!this.map[randomX][randomY].isOccupied()) {
-        this.map[randomX][randomY].player = true;
+        this.map[randomX][randomY].player = counter;
         this.players[counter] = new Player(randomX, randomY);
         counter++;
       }
@@ -302,50 +285,16 @@ class Board {
           'data-x': x, 
           'data-y': y
         }
-
+        
         cell.click({board: this}, move);
         cell.attr(coordonnate);
-              
-        // add style dedending state of cell
-        if (this.map[x][y].blocked){
-          cell.addClass('blocked');
-        } else {
-          cell.addClass('path');
-        }
-        
-        if (this.map[x][y].weapon){
-          cell.addClass('weapon');
-        }
-        
-        if (this.map[x][y].player){
-          let jojo = $('<span></span>').addClass('player-jojo');
-          cell.addClass('player'); 
-          cell.prepend(jojo);      
-        }
-
-        if (this.map[x][y].current){
-          let juju = $('<span></span>').addClass('player-juju');
-          cell.addClass('player'); 
-          cell.prepend(juju);      
-        }
-
-
-        
-        
-        
         // add cell to line
         line.append(cell);
+        this.map[x][y].updateHTML();
         //setTimeout(() => { line.append(cell); }, timeout);
         //timeout += 20;
       }
     }
-
-    let currentPlayer = this.players[this.currentPlayerIndex];
-    console.log(currentPlayer);
-    let currentPlayerCell = this.map[currentPlayer.x][currentPlayer.y];
-    currentPlayerCell.current = true;
-    console.log("le joueur courant est maintenant");
-    console.log(currentPlayerCell);    
   }
 }
 

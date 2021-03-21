@@ -168,7 +168,7 @@ main {
     background: green;
 }
 
-.cell.player::after {
+/* .cell.player::after {
     content: "";
     position: absolute;
     width: 4rem;
@@ -177,7 +177,7 @@ main {
     transform: translate(-50%);
     border-radius: 99%;
     
-}
+} */
 
 .cell.accessible{
     background: lawngreen;
@@ -191,27 +191,32 @@ main {
     background: lawngreen;
 }
 
-.player-jojo{
-    position: absolute;
+.player-0:after{
+    content: "PLAYER 0";
     width: 4rem;
-    height: 1rem;
-    left: 50%;
-    background: khaki;
-    transform: translate(-50%);
-    border-radius: 99%;
-    box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34);
-    -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34);
-    -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,0.34); ;
+    height:4rem;
+    box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1); ;
 }
 
-.player-jojo.current:after {
+.player-1:after{
+    content: "PLAYER 1";
+    width: 4rem;
+    height:4rem;
+    box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1); ;
+}
+
+.current:after {
     position: absolute;
     width: 4rem;
     height: 4rem;
     content: "A moi de jouer !";
 }
 
-.player-jojo.second {
+.second:after {
     position: absolute;
     width: 4rem;
     height: 4rem;
