@@ -191,6 +191,33 @@ main {
     background: lawngreen;
 }
 
+.player-0{
+    width: 3rem;
+    height: 3rem;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius:100%;
+    background: yellow;
+    box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+}
+
+.player-1{
+    width: 3rem;
+    height: 3rem;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(255, 82, 203);
+    box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+    -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
+}
+
 .player-0:after{
     content: "PLAYER 0";
     width: 4rem;
@@ -222,3 +249,17 @@ main {
     height: 4rem;
     content: "En attente d'action";
 }
+
+.army > span{
+   transform:scale(1.5);
+}
+
+.army > span:before{
+    
+        content: "";
+        position: absolute;
+        width: 3rem;
+        height: 1rem;
+        border-radius: 99%;
+        border: 2px solid blue;
+}   

@@ -25,11 +25,19 @@ class Cell {
     }
     if (this.weapon) {
       cell.addClass("weapon");
+      let weapon = $("<span></span>");
+      weapon.addClass('weapon-'); 
+      cell.append(weapon)
     }
     if (this.player != null) {
+      cell.addClass("player");
       let player = $("<span></span>");
       player.addClass('player-'+ this.player); 
       cell.append(player)
+    }
+
+    if ((this.player!= null) && (this.weapon)) {
+      cell.addClass("army");
     }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
@@ -41,22 +49,56 @@ class Cell {
       return false;
     }
   }
-
-  // isSelected(){
-  //   let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
-  //   cell.dblclick(function(){
-  //     console.log(cell);
-  //   })
-  // }
 }
 
 class Player {
   constructor(x, y) {
     //this.name = name;
-    this.hp = 10;
+    this.hp = 100;
     this.x = x;
     this.y = y;
-    this.weapon = null;
+    this.weapon = false;
+  }  
+}
+
+class Weapon {
+  constructor(x, y) {
+    this.name = "";
+    this.type = 0;
+    // this.type = {
+    //   0:"pelle",
+    //   1:"couteau",
+    //   2:"pistolet",
+    //   3:"batte",
+    //   4:"mitraillette",
+    //   5:"fusil à pompe"
+    // }
+    this.damage = null;
+    this.x = x;
+    this.y = y;
+  }
+
+  updateClass(){
+    let weaponO = $("weapon-");
+    if (this.type == 1){
+      weaponO.addClass("couteau")
+    }
+    if (this.type == 2){
+      weaponO.addClass("mitraillete")
+    }
+    if (this.type == 3){
+      weaponO.addClass("pelle")
+    }
+    if (this.type == 4){
+      weaponO.addClass("caca")
+    }
+    if (this.type == 5){
+      weapon0.addClass("zib")
+    }
+    else{
+      weaponO.addClass("rate")
+    }
+    
   }
 }
 
@@ -78,7 +120,6 @@ function move(event){
   //CONSOLE
   let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
   console.log(currentPlayerCell);
-  //DOM
 
   let accessibleCells = board.getAccessibleCells(currentPlayerCell);
   console.log(accessibleCells);
@@ -90,9 +131,16 @@ function move(event){
 
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
+  if(targetCell.weapon == true){
+    currentPlayer.weapon = true;
+    console.log("le joueur est armé")
+    console.log(currentPlayer)
+  }
+
   currentPlayerCell.player = null;
   currentPlayerCell.updateHTML();
   targetCell.player = board.currentPlayerIndex;
+  
   targetCell.updateHTML();
   board.switchCurrentPlayer();
   board.getAccessibleCells(currentPlayerCell);
@@ -103,8 +151,6 @@ function move(event){
   // 4.bis si non, alert action impossible
  }
 
-
-
 // Creation d'une class board 
 class Board {
   constructor(boardSize){
@@ -114,14 +160,14 @@ class Board {
     //players = tableau contenant les joueurs (objet de type Player)
     this.players = new Array;
     this.currentPlayerIndex = 0;
-
+    this.weapons = new Array;
     
+       
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
     this.blockRandomCells(10);
     this.weaponizedRandomCells(5);
     this.playerRandomCells(2);
-  
   }
   
   // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
@@ -165,13 +211,28 @@ class Board {
       // on check si la cellule est deja bloquee
       if (!this.map[randomX][randomY].isOccupied()) {
         this.map[randomX][randomY].weapon = true;
+        this.weapons[counter] = new Weapon(randomX, randomY);
+        this.weapons[counter].type = counter+1;
+        this.weapons[counter].damage = counter*5;
+        console.log('this.weapons[counter]')
+        console.log(this.weapons[counter])
+        this.weapons[counter].damage = counter*10;
         counter++;
+    
+        // for (let i = 0; i <= 5; i+2){
+        //   this.weapons[i].defense = false;
+        //   this.weapons[i].attack = true;
+        // }
+      
       }
+     
       else {
         // on est tombe sur une cellule deja bloquee, on recommence.
         continue;
       }
+
     }
+    
   };
   
   playerRandomCells(qty) {
@@ -256,7 +317,7 @@ class Board {
   getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
   }
-  
+ 
   switchCurrentPlayer(){
     if(this.currentPlayerIndex == 0){
       this.currentPlayerIndex = 1;
@@ -301,6 +362,7 @@ class Board {
         //setTimeout(() => { line.append(cell); }, timeout);
         //timeout += 20;
       }
+      
     }
   }
 }
@@ -312,7 +374,7 @@ $( document ).ready(function() {
   console.log(board.boardSize);
   console.log(board.map[1][2]);
   // board.printLogBoard();
-  
+
   
   $('#rideau').addClass('slide-up');
   board.printBoard();
