@@ -37,36 +37,14 @@ class Cell {
       
     }
 
-    // Si weapon est un booleen :
-    // if (this.weapon) {
-    //   cell.addClass("weapon");
-    // }
-
     // Avec les Weapon Enrichie :
     if (this.weapon != null) {
       cell.addClass("weapon");
-     
-
-      for (let i=0; i< Object.keys(armory).length; i++){
-        let id = Object.keys(armory)[i];
-        let weapon = $("<span></span>");
-        weapon.addClass(id);
-        cell.append(weapon);
-      }
-
-      // if (this.weapon = armory[Object.keys(armory)[0]]){
-      //   cell.addClass("firegun");
-      // }
-      // if (this.weapon = armory[Object.keys(armory)[1]]){
-      //   cell.addClass("shovel");
-      // }
-      // if (this.weapon= armory[Object.keys(armory)[2]]){
-      //   cell.addClass("rock");
-      // }
-      // if (this.weapon= armory[Object.keys(armory)[3]]){
-      //   cell.addClass("rope");
-      // }
-    }
+      let weapon = $("<span></span>");
+      cell.append(weapon);
+      weapon.addClass(this.weapon)
+    }  
+    
 
     if (this.player != null) {
       let player = $("<span></span>");
@@ -125,6 +103,14 @@ function move(event){
     alert("Not accessible!");
     return;
   }
+
+  if (targetCell.weapon != null){
+    currentPlayer.weapon = armory[targetCell.weapon]
+  }
+  console.log('statut weapon du joueur')
+  console.log(targetCell.weapon)
+  console.log(currentPlayer.weapon)
+
 
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
@@ -203,6 +189,7 @@ class Board {
       // on check si la cellule est deja bloquee
       if (!this.map[randomX][randomY].isOccupied()) {
         this.map[randomX][randomY].weapon = Object.keys(armory)[counter];
+        console.log(Object.keys(armory)[counter])
         counter++;
       }
       else {
