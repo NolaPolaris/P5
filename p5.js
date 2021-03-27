@@ -1,8 +1,8 @@
 // Enrichir la propriété "weapon"
 let armory = {
-  "firegun": 20,
-  "shovel": 15,
-  "rock":10,
+  "firegun": 25,
+  "shovel": 20,
+  "rock":15,
   "rope":5,
   }
 // On utilise la méthode Object.keys(armory)[0] pour chercher via un index (variable ou entier)
@@ -26,6 +26,8 @@ class Cell {
   
   updateHTML() {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
+    let weapon = $("<span></span>").addClass(this.weapon);
+    let player = $("<span></span>").addClass("player-" + this.player);
 
     cell.attr("class", "cell");
     cell.empty(); 
@@ -40,17 +42,18 @@ class Cell {
     // Avec les Weapon Enrichie :
     if (this.weapon != null) {
       cell.addClass("weapon");
-      let weapon = $("<span></span>");
       cell.append(weapon);
-      weapon.addClass(this.weapon)
     }  
-    
 
     if (this.player != null) {
-      let player = $("<span></span>");
-      player.addClass('player-'+ this.player); 
-      cell.append(player)
+      cell.append(player);
     }
+
+    if (this.player != null && this.weapon != null) {
+      cell.append(player);
+      player.append(weapon);
+      player.addClass('armed-' + this.weapon)
+    } 
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
@@ -71,8 +74,19 @@ class Player {
     this.hp = 10;
     this.x = x;
     this.y = y;
+    this.damage = 10;
     this.weapon = null;
     // this.damage = armory[armory[Object.keys(armory)]]
+  }
+
+  updateHTML(){
+    let player = $("[data-x="+this.x+"][data-y="+this.y+"]");
+    let weapon = $("<span></span>").addClass(this.weapon);
+
+    if (this.weapon != null) {
+      player.addClass("armed");
+      player.append(weapon);
+    }  
   }
 }
 
@@ -105,11 +119,14 @@ function move(event){
   }
 
   if (targetCell.weapon != null){
-    currentPlayer.weapon = armory[targetCell.weapon]
+    currentPlayer.damage = armory[targetCell.weapon];
+    currentPlayer.weapon = targetCell.weapon;
+    targetCell.weapon = null;
   }
   console.log('statut weapon du joueur')
+  console.log(currentPlayer)
   console.log(targetCell.weapon)
-  console.log(currentPlayer.weapon)
+  console.log(currentPlayer.damage)
 
 
   currentPlayer.x = targetCell.x;
