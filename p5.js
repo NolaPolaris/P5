@@ -1,3 +1,16 @@
+// Enrichir la propriété "weapon"
+let armory = {
+  "firegun": 20,
+  "shovel": 15,
+  "rock":10,
+  "rope":5,
+  }
+// On utilise la méthode Object.keys(armory)[0] pour chercher via un index (variable ou entier)
+// l'entrée d'un dictionnaire dans un array
+// ------->   Object.keys(armory)[0]
+// On utilise ce résultat pour indiquer quel clé chercher dans le dictionnaire armory : 
+// ------>  armory[Object.keys(armory)[0]]
+// {damage: 20, name: "firegun"}
 
 
 // CLASS CASE
@@ -5,7 +18,7 @@
 class Cell {
   constructor(x, y) {
     this.blocked = false;
-    this.weapon = false;
+    this.weapon = null;
     this.player = null;
     this.x = x;
     this.y = y;
@@ -23,82 +36,65 @@ class Cell {
       cell.addClass("path");
       
     }
-    if (this.weapon) {
+
+    // Si weapon est un booleen :
+    // if (this.weapon) {
+    //   cell.addClass("weapon");
+    // }
+
+    // Avec les Weapon Enrichie :
+    if (this.weapon != null) {
       cell.addClass("weapon");
-      let weapon = $("<span></span>");
-      weapon.addClass('weapon-'); 
-      cell.append(weapon)
+     
+
+      for (let i=0; i< Object.keys(armory).length; i++){
+        let id = Object.keys(armory)[i];
+        let weapon = $("<span></span>");
+        weapon.addClass(id);
+        cell.append(weapon);
+      }
+
+      // if (this.weapon = armory[Object.keys(armory)[0]]){
+      //   cell.addClass("firegun");
+      // }
+      // if (this.weapon = armory[Object.keys(armory)[1]]){
+      //   cell.addClass("shovel");
+      // }
+      // if (this.weapon= armory[Object.keys(armory)[2]]){
+      //   cell.addClass("rock");
+      // }
+      // if (this.weapon= armory[Object.keys(armory)[3]]){
+      //   cell.addClass("rope");
+      // }
     }
+
     if (this.player != null) {
-      cell.addClass("player");
       let player = $("<span></span>");
       player.addClass('player-'+ this.player); 
       cell.append(player)
     }
-
-    if ((this.player!= null) && (this.weapon)) {
-      cell.addClass("army");
-    }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
-    if (this.blocked || this.weapon || this.player != null) {
+
+    if (this.blocked || this.weapon != null || this.player != null) {
       return true;
     }
     else {
       return false;
     }
   }
+
 }
 
 class Player {
   constructor(x, y) {
     //this.name = name;
-    this.hp = 100;
+    this.hp = 10;
     this.x = x;
     this.y = y;
-    this.weapon = false;
-  }  
-}
-
-class Weapon {
-  constructor(x, y) {
-    this.name = "";
-    this.type = 0;
-    // this.type = {
-    //   0:"pelle",
-    //   1:"couteau",
-    //   2:"pistolet",
-    //   3:"batte",
-    //   4:"mitraillette",
-    //   5:"fusil à pompe"
-    // }
-    this.damage = null;
-    this.x = x;
-    this.y = y;
-  }
-
-  updateClass(){
-    let weaponO = $("weapon-");
-    if (this.type == 1){
-      weaponO.addClass("couteau")
-    }
-    if (this.type == 2){
-      weaponO.addClass("mitraillete")
-    }
-    if (this.type == 3){
-      weaponO.addClass("pelle")
-    }
-    if (this.type == 4){
-      weaponO.addClass("caca")
-    }
-    if (this.type == 5){
-      weapon0.addClass("zib")
-    }
-    else{
-      weaponO.addClass("rate")
-    }
-    
+    this.weapon = null;
+    // this.damage = armory[armory[Object.keys(armory)]]
   }
 }
 
@@ -120,6 +116,7 @@ function move(event){
   //CONSOLE
   let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
   console.log(currentPlayerCell);
+  //DOM
 
   let accessibleCells = board.getAccessibleCells(currentPlayerCell);
   console.log(accessibleCells);
@@ -131,16 +128,9 @@ function move(event){
 
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
-  if(targetCell.weapon == true){
-    currentPlayer.weapon = true;
-    console.log("le joueur est armé")
-    console.log(currentPlayer)
-  }
-
   currentPlayerCell.player = null;
   currentPlayerCell.updateHTML();
   targetCell.player = board.currentPlayerIndex;
-  
   targetCell.updateHTML();
   board.switchCurrentPlayer();
   board.getAccessibleCells(currentPlayerCell);
@@ -151,6 +141,8 @@ function move(event){
   // 4.bis si non, alert action impossible
  }
 
+
+
 // Creation d'une class board 
 class Board {
   constructor(boardSize){
@@ -160,14 +152,14 @@ class Board {
     //players = tableau contenant les joueurs (objet de type Player)
     this.players = new Array;
     this.currentPlayerIndex = 0;
-    this.weapons = new Array;
+
     
-       
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
     this.blockRandomCells(10);
     this.weaponizedRandomCells(5);
     this.playerRandomCells(2);
+  
   }
   
   // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
@@ -210,29 +202,14 @@ class Board {
       
       // on check si la cellule est deja bloquee
       if (!this.map[randomX][randomY].isOccupied()) {
-        this.map[randomX][randomY].weapon = true;
-        this.weapons[counter] = new Weapon(randomX, randomY);
-        this.weapons[counter].type = counter+1;
-        this.weapons[counter].damage = counter*5;
-        console.log('this.weapons[counter]')
-        console.log(this.weapons[counter])
-        this.weapons[counter].damage = counter*10;
+        this.map[randomX][randomY].weapon = Object.keys(armory)[counter];
         counter++;
-    
-        // for (let i = 0; i <= 5; i+2){
-        //   this.weapons[i].defense = false;
-        //   this.weapons[i].attack = true;
-        // }
-      
       }
-     
       else {
         // on est tombe sur une cellule deja bloquee, on recommence.
         continue;
       }
-
     }
-    
   };
   
   playerRandomCells(qty) {
@@ -317,7 +294,7 @@ class Board {
   getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
   }
- 
+  
   switchCurrentPlayer(){
     if(this.currentPlayerIndex == 0){
       this.currentPlayerIndex = 1;
@@ -362,7 +339,6 @@ class Board {
         //setTimeout(() => { line.append(cell); }, timeout);
         //timeout += 20;
       }
-      
     }
   }
 }
@@ -374,7 +350,7 @@ $( document ).ready(function() {
   console.log(board.boardSize);
   console.log(board.map[1][2]);
   // board.printLogBoard();
-
+  
   
   $('#rideau').addClass('slide-up');
   board.printBoard();
