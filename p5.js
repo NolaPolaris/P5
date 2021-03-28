@@ -1,10 +1,30 @@
 // Enrichir la propriété "weapon"
-let armory = {
-  "firegun": 25,
-  "shovel": 20,
-  "rock":15,
-  "rope":5,
+// let armory = {
+//   "firegun": 25,
+//   "shovel": 20,
+//   "rock":15,
+//   "rope":5,
+//   }
+
+let armory = [
+  {
+    type: "firegun",
+    dmg : 25
+  },
+  {
+    type: "shovel",
+    dmg : 20
+  },
+  {
+    type: "rock",
+    dmg : 15
+  },
+  {
+    type: "rope",
+    dmg : 5
   }
+]
+
 // On utilise la méthode Object.keys(armory)[0] pour chercher via un index (variable ou entier)
 // l'entrée d'un dictionnaire dans un array
 // ------->   Object.keys(armory)[0]
@@ -26,8 +46,6 @@ class Cell {
   
   updateHTML() {
     let cell = $("[data-x="+this.x+"][data-y="+this.y+"]");
-    let weapon = $("<span></span>").addClass(this.weapon);
-    let player = $("<span></span>").addClass("player-" + this.player);
 
     cell.attr("class", "cell");
     cell.empty(); 
@@ -41,19 +59,18 @@ class Cell {
 
     // Avec les Weapon Enrichie :
     if (this.weapon != null) {
+      let weapon = $("<span></span>").addClass(this.weapon.type);
       cell.addClass("weapon");
       cell.append(weapon);
     }  
 
     if (this.player != null) {
-      cell.append(player);
-    }
-
-    if (this.player != null && this.weapon != null) {
+      let player = $("<span></span>").addClass("player-" + this.player.index);
+      let weapon = $("<span></span>").addClass(this.player.weapon.type);
       cell.append(player);
       player.append(weapon);
-      player.addClass('armed-' + this.weapon)
-    } 
+      
+    }
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
@@ -69,82 +86,74 @@ class Cell {
 }
 
 class Player {
-  constructor(x, y) {
+  constructor(x, y, index) {
     //this.name = name;
+    this.index = index;
     this.hp = 10;
     this.x = x;
     this.y = y;
-    this.damage = 10;
-    this.weapon = null;
+    this.weapon = {
+      type: "fist",
+      dmg: 10
+    };
     // this.damage = armory[armory[Object.keys(armory)]]
-  }
-
-  updateHTML(){
-    let player = $("[data-x="+this.x+"][data-y="+this.y+"]");
-    let weapon = $("<span></span>").addClass(this.weapon);
-
-    if (this.weapon != null) {
-      player.addClass("armed");
-      player.append(weapon);
-    }  
   }
 }
 
 function move(event){
   let board = event.data.board;
-  let span = event.target; // ici this == event.target car c'est à lui qu'est bindé l'event click. 
+  let span = event.currentTarget; // ici this == event.target car c'est à lui qu'est bindé l'event click. target != cureentTarget !
   console.log(span)
   // 1. recuperer la cell js
   let x = span.getAttribute('data-x');
-  console.log(x);
   let y = span.getAttribute('data-y');
-  console.log(y);
+  // la cell sur laquerlle le joueur souhaite aller:
   let targetCell = board.map[x][y];
-  console.log(targetCell);
-
-    // CONSOLE 
+  // l'index du joueur courrant :
   let currentPlayer = board.getCurrentPlayer();
-  console.log(currentPlayer);
-  //CONSOLE
+  // La cellulce sur laquelle se trouve le joueur :
   let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
   console.log(currentPlayerCell);
-  //DOM
-
-  let accessibleCells = board.getAccessibleCells(currentPlayerCell);
-  console.log(accessibleCells);
-  
+ 
+  // On regarde quelles cellules sont accessibles :
+  let accessibleCells = board.getAccessibleCells(currentPlayerCell);  
   if (accessibleCells.indexOf(targetCell) == -1){
     alert("Not accessible!");
     return;
   }
 
+  // si la cellule de destination contient une arme, on passe cette arme au joueur et on vide la cellule :
+
   if (targetCell.weapon != null){
-    currentPlayer.damage = armory[targetCell.weapon];
-    currentPlayer.weapon = targetCell.weapon;
-    targetCell.weapon = null;
+    let currentWeapon = currentPlayer.weapon;
+    console.log("arme de la cellule est :")
+    let newWeapon = targetCell.weapon;
+    console.log('arme du joueur')
+    currentPlayer.weapon = newWeapon;
+    if (currentWeapon.type != "fist"){
+      targetCell.weapon = currentWeapon;
+    }
+    else{
+      targetCell.weapon = null;
+    }
+    
   }
-  console.log('statut weapon du joueur')
-  console.log(currentPlayer)
-  console.log(targetCell.weapon)
-  console.log(currentPlayer.damage)
-
-
+  // On enregistre ensuite les nouvelles coordonnées du joueur, ses propriétés et on les passe à la cellule de destination :
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
   currentPlayerCell.player = null;
   currentPlayerCell.updateHTML();
-  targetCell.player = board.currentPlayerIndex;
+  // on passe en propriété player df ela cellule un objet player :
+  targetCell.player = currentPlayer;
+
   targetCell.updateHTML();
   board.switchCurrentPlayer();
-  board.getAccessibleCells(currentPlayerCell);
   
   // 2. recuperer le joueur courant et sa cell
   // 3. verifier que le joueur peut aller sur la cell cliquee
   // 4. si oui, deplacer joueur dans data JS et update html
   // 4.bis si non, alert action impossible
  }
-
-
 
 // Creation d'une class board 
 class Board {
@@ -205,8 +214,8 @@ class Board {
       
       // on check si la cellule est deja bloquee
       if (!this.map[randomX][randomY].isOccupied()) {
-        this.map[randomX][randomY].weapon = Object.keys(armory)[counter];
-        console.log(Object.keys(armory)[counter])
+        this.map[randomX][randomY].weapon = armory[counter];
+        console.log(armory[counter])
         counter++;
       }
       else {
@@ -222,12 +231,14 @@ class Board {
     while(counter < qty) {
       let randomX = this.getRandomInt(this.boardSize);
       let randomY = this.getRandomInt(this.boardSize);
-      
+            
       // on check si la cellule est deja bloquee
       console.log(randomX, randomY, !this.map[randomX][randomY].isOccupied(), counter)
       if (!this.map[randomX][randomY].isOccupied()) {
-        this.map[randomX][randomY].player = counter;
-        this.players[counter] = new Player(randomX, randomY);
+        this.players[counter] = new Player(randomX, randomY, counter);
+        this.map[randomX][randomY].player = this.players[counter];
+        console.log("Voici l'index du player")
+        console.log(this.players[counter].index)
         counter++;
       }
       else {

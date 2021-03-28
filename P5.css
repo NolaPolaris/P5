@@ -152,17 +152,18 @@ main {
 }
 
 .cell.blocked{
-    background: red;
+    background: url(img/stone.png) center no-repeat;
+    background-size: contain;
 }
 
-.cell.weapon:before {
+/* .cell.weapon:before {
     content: "";
     position: absolute;
     width: 3rem;
     height: 1rem;
     border-radius: 99%;
     border: 2px solid blue;
-}
+} */
 
 .cell.path{
     background: green;
@@ -235,7 +236,7 @@ main {
     -webkit-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
     -moz-box-shadow: -1px 200px 400px 0px rgba(0,0,0,1); ;
 }
-
+/* 
 .current:after {
     position: absolute;
     width: 4rem;
@@ -248,7 +249,43 @@ main {
     width: 4rem;
     height: 4rem;
     content: "En attente d'action";
+} */
+
+.firegun{
+    content: "";
+    position: absolute;
+    width: 4rem;
+    height:4rem;
+    background: url(img/laser-gun.svg);
 }
+
+.shovel{
+    content: "";
+    position: absolute;
+    width: 4rem;
+    height:4rem;
+    background: url(img/shovel.svg);
+}
+
+.rock{
+    content: "";
+    position: absolute;
+    width: 4rem;
+    height:4rem;
+    background: url(img/stone.svg);
+}
+
+.rope{
+    content: "";
+    position: absolute;
+    width: 4rem;
+    height:4rem;
+    background: url(img/jump-rope.svg);
+}
+
+
+
+
 
 .army > span{
    transform:scale(1.5);
