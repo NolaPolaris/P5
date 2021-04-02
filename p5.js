@@ -54,7 +54,6 @@ class Cell {
       cell.addClass("blocked");
     } else {
       cell.addClass("path");
-      
     }
 
     // Avec les Weapon Enrichie :
@@ -96,7 +95,8 @@ class Player {
       type: "fist",
       dmg: 10
     };
-    // this.damage = armory[armory[Object.keys(armory)]]
+    // Statut : attaquant, défenseur, ou attaqué 
+    // On attribut ce statut en fonction de la réponse à la valeur de la checkbox affichée lors de la confrontation
   }
 }
 
@@ -138,6 +138,11 @@ function move(event){
     }
     
   }
+
+  // On crée une nouvelle condition : si la targetCell est adjacente à celle d'un autre joueur :
+
+  //Si oui : le combat s'engage, et on affiche une première modale d'information : choix entre attaquer ou défendre.
+
   // On enregistre ensuite les nouvelles coordonnées du joueur, ses propriétés et on les passe à la cellule de destination :
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
@@ -154,6 +159,17 @@ function move(event){
   // 4. si oui, deplacer joueur dans data JS et update html
   // 4.bis si non, alert action impossible
  }
+
+ //création d'une fonction "fight":
+ // - Affichage d'une modale avec checkbox
+ // - Si attack : récuperer les dmg infligée par l'arme du joueur
+ // let dmg = joeur -> arme -> dmg
+ // - checker les PV du joueur attaqué, les actualiser : 
+ //   si le joueur attaqué a choisi d'attaquer : PV = PV - dmg
+ //   s'il a choisi la défense : PV = PV - (dmg/2);
+ // Affichage d'une modale : vous avez reçu x dmg ! + checkbox
+
+
 
 // Creation d'une class board 
 class Board {

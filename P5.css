@@ -5,9 +5,9 @@ body {
 
 main {
     height: 100%;
-    /* display: flex;
+    display: flex;
     justify-content: center;
-    align-items: center; */
+    align-items: center;
 }
 
 
@@ -283,10 +283,6 @@ main {
     background: url(img/jump-rope.svg);
 }
 
-
-
-
-
 .army > span{
    transform:scale(1.5);
 }
@@ -300,3 +296,17 @@ main {
         border-radius: 99%;
         border: 2px solid blue;
 }   
+
+.modale {
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35%;
+    padding:4rem 2rem;
+    opacity:0.9;
+    background: linear-gradient(145deg, rgba(232,233,234,0.5) 0%, rgb(255 255 255) 48%, rgba(232,233,234,0.5) 100%);
+    border:solid 2px #519ecb;
+    border-radius: 1rem;
+    z-index: 2;
+}
