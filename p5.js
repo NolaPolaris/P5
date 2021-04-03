@@ -114,6 +114,10 @@ function move(event){
   // La cellulce sur laquelle se trouve le joueur :
   let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
   console.log(currentPlayerCell);
+  console.log("target est ceci");
+  console.log(targetCell);
+  console.log(targetCell.x+1);
+
  
   // On regarde quelles cellules sont accessibles :
   let accessibleCells = board.getAccessibleCells(currentPlayerCell);  
@@ -140,6 +144,22 @@ function move(event){
   }
 
   // On crée une nouvelle condition : si la targetCell est adjacente à celle d'un autre joueur :
+
+  if (targetCell.weapon != null){
+    let currentWeapon = currentPlayer.weapon;
+    console.log("arme de la cellule est :")
+    let newWeapon = targetCell.weapon;
+    console.log('arme du joueur')
+    currentPlayer.weapon = newWeapon;
+    if (currentWeapon.type != "fist"){
+      targetCell.weapon = currentWeapon;
+    }
+    else{
+      targetCell.weapon = null;
+    }
+    
+  }
+
 
   //Si oui : le combat s'engage, et on affiche une première modale d'information : choix entre attaquer ou défendre.
 
