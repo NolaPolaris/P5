@@ -22,17 +22,14 @@
         
         </section>
 
-        <div class="radio_box modale">
+        <form method="post" action="" class="radiobox modale">
             <p>C'est la bagarre ! Que faites vous ?</p>
-            <div class="choice">
-                <label for="attack">Attack ! (je deviene fou)</label>
-                <input type="radio" value="attack" name="attack" id="attack">
-            </div>
-            <div class="choice">
-                <label for="defend">Defend ! (je garder calm)</label>
-                <input type="radio" value="defend" name="defend" id="defend">
-            </div>
-        </div>
+            <label for="attack">Attack ! (je deviene fou)</label>
+            <input type="radio" value="attack" name="choice" id="attack">
+            <label for="defend">Defend ! (je garder calm)</label>
+            <input type="radio" value="defend" name="choice" id="defend">
+            <button id="send">GO !</button>
+        </form>
         
     </main>
 

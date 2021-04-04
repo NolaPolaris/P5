@@ -1,11 +1,3 @@
-// Enrichir la propriété "weapon"
-// let armory = {
-//   "firegun": 25,
-//   "shovel": 20,
-//   "rock":15,
-//   "rope":5,
-//   }
-
 let armory = [
   {
     type: "firegun",
@@ -24,14 +16,6 @@ let armory = [
     dmg : 5
   }
 ]
-
-// On utilise la méthode Object.keys(armory)[0] pour chercher via un index (variable ou entier)
-// l'entrée d'un dictionnaire dans un array
-// ------->   Object.keys(armory)[0]
-// On utilise ce résultat pour indiquer quel clé chercher dans le dictionnaire armory : 
-// ------>  armory[Object.keys(armory)[0]]
-// {damage: 20, name: "firegun"}
-
 
 // CLASS CASE
 
@@ -70,6 +54,11 @@ class Cell {
       player.append(weapon);
       
     }
+  }
+
+  animHTML(){
+    let player = $("<span></span>").addClass("player-" + this.player.index);
+    player.addClass("move");
   }
   // faire la distinction entre obstacle et occupée (par une arme ou un joueur)
   isOccupied() {
@@ -116,8 +105,6 @@ function move(event){
   console.log(currentPlayerCell);
   console.log("target est ceci");
   console.log(targetCell);
-  console.log(targetCell.x+1);
-
  
   // On regarde quelles cellules sont accessibles :
   let accessibleCells = board.getAccessibleCells(currentPlayerCell);  
@@ -127,7 +114,7 @@ function move(event){
   }
 
   // si la cellule de destination contient une arme, on passe cette arme au joueur et on vide la cellule :
-
+   
   if (targetCell.weapon != null){
     let currentWeapon = currentPlayer.weapon;
     console.log("arme de la cellule est :")
@@ -145,33 +132,51 @@ function move(event){
 
   // On crée une nouvelle condition : si la targetCell est adjacente à celle d'un autre joueur :
 
-  if (targetCell.weapon != null){
-    let currentWeapon = currentPlayer.weapon;
-    console.log("arme de la cellule est :")
-    let newWeapon = targetCell.weapon;
-    console.log('arme du joueur')
-    currentPlayer.weapon = newWeapon;
-    if (currentWeapon.type != "fist"){
-      targetCell.weapon = currentWeapon;
-    }
-    else{
-      targetCell.weapon = null;
-    }
-    
+  let modale = $('.modale');
+
+  if (board.map[targetCell.x+1][targetCell.y].player!=null && board.map[targetCell.x+1][targetCell.y].player.index!=currentPlayer){
+    console.log("combat X+1");
+    console.log(targetCell);
+    modale.addClass('pop');
+  }
+  
+  if (board.map[targetCell.x-1][targetCell.y].player!=null && board.map[targetCell.x-1][targetCell.y].player.index!=currentPlayer){
+    console.log("combat X-1");
+    console.log(targetCell);
+    modale.addClass('pop');
   }
 
+  if (board.map[targetCell.x][targetCell.y+1].player!=null && board.map[targetCell.x][targetCell.y+1].player.index!=currentPlayer){
+    console.log("combat y+1");
+    console.log(targetCell);
+    modale.addClass('pop');
+  }
+
+  if (board.map[targetCell.x][targetCell.y-1].player!=null && board.map[targetCell.x][targetCell.y-1].player.index!=currentPlayer){
+    console.log("combat y1");
+    console.log(targetCell);
+    modale.addClass('pop');
+  }
+
+  else{
+    console.log("peace");
+  }
 
   //Si oui : le combat s'engage, et on affiche une première modale d'information : choix entre attaquer ou défendre.
 
   // On enregistre ensuite les nouvelles coordonnées du joueur, ses propriétés et on les passe à la cellule de destination :
   currentPlayer.x = targetCell.x;
   currentPlayer.y = targetCell.y;
+
+  
+  // currentPlayerCell.animHTML()
   currentPlayerCell.player = null;
   currentPlayerCell.updateHTML();
+
   // on passe en propriété player df ela cellule un objet player :
   targetCell.player = currentPlayer;
-
   targetCell.updateHTML();
+  // Si le current player s'est déplacé à côté d'un autre joueur, il garde
   board.switchCurrentPlayer();
   
   // 2. recuperer le joueur courant et sa cell
@@ -181,7 +186,7 @@ function move(event){
  }
 
  //création d'une fonction "fight":
- // - Affichage d'une modale avec checkbox
+ // - Affichage d'une modale avec radio button
  // - Si attack : récuperer les dmg infligée par l'arme du joueur
  // let dmg = joeur -> arme -> dmg
  // - checker les PV du joueur attaqué, les actualiser : 
