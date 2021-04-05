@@ -77,7 +77,7 @@ class Player {
   constructor(x, y, index) {
     //this.name = name;
     this.index = index;
-    this.hp = 10;
+    this.hp = 100;
     this.x = x;
     this.y = y;
     this.weapon = {
@@ -159,12 +159,26 @@ function move(event){
   
 function attack(event){
     console.log('la function attack')
+    let modale = $('.modale');
+    modale.removeClass('pop');
     let board = event.data.board;
+    console.log(board)
+    let fighter = board.players[board.currentPlayerIndex];
+    let victim = board.players[board.secondPlayerIndex];
+    let dmg = fighter.weapon.dmg;
+    fighter.action = 'attack';
+    victim.hp = victim.hp - dmg;
+    board.updateFight();
 }
 
 function defend(event){
   console.log('la function defend')
-
+  let board = event.data.board;
+  let fighter = board.players[board.currentPlayerIndex];
+  let victim = board.players[board.secondPlayerIndex];
+  fighter.action = 'defend';
+  console.log(fighter.action);
+  board.updateFight()
 }
 
 
@@ -373,16 +387,32 @@ class Board {
     playerName.text("A toi de jouer player-"+currentPlayer.index)
     let attackBtn = $('#attack');
     let defendBtn = $('#defend');
-    
     attackBtn.click({board: this}, attack);
     defendBtn.click({board: this}, defend);
+  }
+
+  updateFight(){
+    let currentPlayer = this.getCurrentPlayer();
+    let secondPlayer = this.getSecondPlayer();
+    if (currentPlayer.action == "attack"){
+      currentPlayer.action = null;
+    }
+
+    if (currentPlayer.action == "defend"){
+      currentPlayer.action = "defend";
+    }
+    this.switchCurrentPlayer();
+    console.log('nouveau fighter');
+    console.log(currentPlayer);
+    console.log('nouveau victim');
+    console.log(secondPlayer);
+    this.startFight();
   }
   
   get boardSize() {
     return this.map.length
   }
-  
-
+ 
   printBoard() {
     let plateau = $('#board');
     let timeout = 0;
