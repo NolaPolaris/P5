@@ -47,6 +47,36 @@ for (x=0; x<boardSize; x++) {
 }
 
 
+// adjacentCell une par une = trop long
+
+if (board.map[targetCell.x+1][targetCell.y].player!=null && board.map[targetCell.x+1][targetCell.y].player.index!=currentPlayer){
+  console.log("combat X+1");
+  console.log(targetCell);
+  modale.addClass('pop');
+}
+
+if (board.map[targetCell.x-1][targetCell.y].player!=null && board.map[targetCell.x-1][targetCell.y].player.index!=currentPlayer){
+  console.log("combat X-1");
+  console.log(targetCell);
+  modale.addClass('pop');
+}
+
+if (board.map[targetCell.x][targetCell.y+1].player!=null && board.map[targetCell.x][targetCell.y+1].player.index!=currentPlayer){
+  console.log("combat y+1");
+  console.log(targetCell);
+  modale.addClass('pop');
+}
+
+if (board.map[targetCell.x][targetCell.y-1].player!=null && board.map[targetCell.x][targetCell.y-1].player.index!=currentPlayer){
+  console.log("combat y1");
+  console.log(targetCell);
+  modale.addClass('pop');
+}
+
+else{
+  console.log("peace");
+}
+
 // ------------------------------------------------------------------------------------------------
 
 

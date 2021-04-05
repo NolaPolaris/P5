@@ -84,13 +84,29 @@ class Player {
       type: "fist",
       dmg: 10
     };
+    this.action = null;
     // Statut : attaquant, défenseur, ou attaqué 
     // On attribut ce statut en fonction de la réponse à la valeur de la checkbox affichée lors de la confrontation
+  }
+
+  fight(){
+    if (this.action == 'attack'){
+      console.log('le joueur' + this.index + 'attack !')
+    }
+    if (this.action == 'defend'){
+      console.log('le joueur' + this.index + 'se defend !')
+    }
+    else{
+      console.log("lejoueur prend la fuite")
+    }
   }
 }
 
 function move(event){
   let board = event.data.board;
+  if(board.fight){
+    return;
+  }
   let span = event.currentTarget; // ici this == event.target car c'est à lui qu'est bindé l'event click. target != cureentTarget !
   console.log(span)
   // 1. recuperer la cell js
@@ -100,11 +116,9 @@ function move(event){
   let targetCell = board.map[x][y];
   // l'index du joueur courrant :
   let currentPlayer = board.getCurrentPlayer();
-  // La cellulce sur laquelle se trouve le joueur :
+  // let secondPlayer = board.getSecondPlayer();
+  // La cellule sur laquelle se trouve le joueur :
   let currentPlayerCell = board.map[currentPlayer.x][currentPlayer.y];
-  console.log(currentPlayerCell);
-  console.log("target est ceci");
-  console.log(targetCell);
  
   // On regarde quelles cellules sont accessibles :
   let accessibleCells = board.getAccessibleCells(currentPlayerCell);  
@@ -112,9 +126,7 @@ function move(event){
     alert("Not accessible!");
     return;
   }
-
-  // si la cellule de destination contient une arme, on passe cette arme au joueur et on vide la cellule :
-   
+  // si la cellule de destination contient une arme, on passe cette arme au joueur et on vide la cellule :   
   if (targetCell.weapon != null){
     let currentWeapon = currentPlayer.weapon;
     console.log("arme de la cellule est :")
@@ -127,73 +139,33 @@ function move(event){
     else{
       targetCell.weapon = null;
     }
-    
   }
-
-  // On crée une nouvelle condition : si la targetCell est adjacente à celle d'un autre joueur :
-
-  let modale = $('.modale');
-
-  if (board.map[targetCell.x+1][targetCell.y].player!=null && board.map[targetCell.x+1][targetCell.y].player.index!=currentPlayer){
-    console.log("combat X+1");
-    console.log(targetCell);
-    modale.addClass('pop');
-  }
-  
-  if (board.map[targetCell.x-1][targetCell.y].player!=null && board.map[targetCell.x-1][targetCell.y].player.index!=currentPlayer){
-    console.log("combat X-1");
-    console.log(targetCell);
-    modale.addClass('pop');
-  }
-
-  if (board.map[targetCell.x][targetCell.y+1].player!=null && board.map[targetCell.x][targetCell.y+1].player.index!=currentPlayer){
-    console.log("combat y+1");
-    console.log(targetCell);
-    modale.addClass('pop');
-  }
-
-  if (board.map[targetCell.x][targetCell.y-1].player!=null && board.map[targetCell.x][targetCell.y-1].player.index!=currentPlayer){
-    console.log("combat y1");
-    console.log(targetCell);
-    modale.addClass('pop');
-  }
-
-  else{
-    console.log("peace");
-  }
-
-  //Si oui : le combat s'engage, et on affiche une première modale d'information : choix entre attaquer ou défendre.
-
   // On enregistre ensuite les nouvelles coordonnées du joueur, ses propriétés et on les passe à la cellule de destination :
   currentPlayer.x = targetCell.x;
-  currentPlayer.y = targetCell.y;
-
-  
-  // currentPlayerCell.animHTML()
+  currentPlayer.y = targetCell.y;  
   currentPlayerCell.player = null;
   currentPlayerCell.updateHTML();
-
-  // on passe en propriété player df ela cellule un objet player :
+  // on passe en propriété player de la cellule un objet player :
   targetCell.player = currentPlayer;
   targetCell.updateHTML();
-  // Si le current player s'est déplacé à côté d'un autre joueur, il garde
-  board.switchCurrentPlayer();
+  fight = board.checkFight();
+  //si fight => affiche modale de fight
+  if (fight == true){
+    board.startFight();
+  } else {
+    board.switchCurrentPlayer(); 
+  }
+}
   
-  // 2. recuperer le joueur courant et sa cell
-  // 3. verifier que le joueur peut aller sur la cell cliquee
-  // 4. si oui, deplacer joueur dans data JS et update html
-  // 4.bis si non, alert action impossible
- }
+function attack(event){
+    console.log('la function attack')
+    let board = event.data.board;
+}
 
- //création d'une fonction "fight":
- // - Affichage d'une modale avec radio button
- // - Si attack : récuperer les dmg infligée par l'arme du joueur
- // let dmg = joeur -> arme -> dmg
- // - checker les PV du joueur attaqué, les actualiser : 
- //   si le joueur attaqué a choisi d'attaquer : PV = PV - dmg
- //   s'il a choisi la défense : PV = PV - (dmg/2);
- // Affichage d'une modale : vous avez reçu x dmg ! + checkbox
+function defend(event){
+  console.log('la function defend')
 
+}
 
 
 // Creation d'une class board 
@@ -205,14 +177,13 @@ class Board {
     //players = tableau contenant les joueurs (objet de type Player)
     this.players = new Array;
     this.currentPlayerIndex = 0;
-
-    
+    this.secondPlayerIndex = 1;
+    this.fight = false;
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
     this.blockRandomCells(10);
     this.weaponizedRandomCells(5);
     this.playerRandomCells(2);
-  
   }
   
   // La méthode initializeMap crée une map sous forme de tableau multidimensionnel:
@@ -350,18 +321,61 @@ class Board {
   getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
   }
+
+  getSecondPlayer(){
+    return this.players[this.secondPlayerIndex];
+  }
   
   switchCurrentPlayer(){
     if(this.currentPlayerIndex == 0){
       this.currentPlayerIndex = 1;
+      this.secondPlayerIndex = 0;
     }else{
       this.currentPlayerIndex = 0;
+      this.secondPlayerIndex = 1;
     }
   }
 
   getPlayerCell(playerIndex) {
     let player = this.players[playerIndex];
     return this.map[player.x][player.y];
+  }
+
+  checkFight(){
+    let currentPlayer = this.getCurrentPlayer();
+    let secondPlayer = this.getSecondPlayer();
+    if (secondPlayer.x == currentPlayer.x+1 && secondPlayer.y == currentPlayer.y){
+      console.log("combat X+1");
+      this.fight = true;
+    } 
+    if (secondPlayer.x == currentPlayer.x-1 && secondPlayer.y == currentPlayer.y){
+      console.log("combat X-1");
+    
+      this.fight = true;
+    } 
+    if (secondPlayer.x == currentPlayer.x && secondPlayer.y == currentPlayer.y+1){
+      console.log("combat y+1");
+      this.fight = true;
+    } 
+    if (secondPlayer.x == currentPlayer.x+1 && secondPlayer.y == currentPlayer.y-1){
+      console.log("combat y1");
+      this.fight = true;
+    }
+    return this.fight;
+  }
+
+  startFight(){
+    let modale = $('.modale');
+    let playerName = $('#player_name');
+    let currentPlayer = this.getCurrentPlayer();
+    modale.addClass('pop'); 
+    console.log(currentPlayer.index);
+    playerName.text("A toi de jouer player-"+currentPlayer.index)
+    let attackBtn = $('#attack');
+    let defendBtn = $('#defend');
+    
+    attackBtn.click({board: this}, attack);
+    defendBtn.click({board: this}, defend);
   }
   
   get boardSize() {
