@@ -160,15 +160,29 @@ function move(event){
 function attack(event){
     console.log('la function attack')
     let modale = $('.modale');
-    modale.removeClass('pop');
+    let modaleScore = $('.modale_score');
+    let bulle = $('<span></span>').addClass('bulle');
     let board = event.data.board;
-    console.log(board)
     let fighter = board.players[board.currentPlayerIndex];
     let victim = board.players[board.secondPlayerIndex];
+    let fighterDom = $('.player-'+ fighter.index);
+    let victimDom = $('.player-'+ victim.index)
+    console.log("la victime est")
+    console.log(victimDom);
+    modale.removeClass('pop');
     let dmg = fighter.weapon.dmg;
     fighter.action = 'attack';
     victim.hp = victim.hp - dmg;
-    board.updateFight();
+
+    //animation :
+    victimDom.addClass('damage').append(bulle);
+    setTimeout(() => {  victimDom.removeClass('damage').empty(); }, 1000)
+    let infoScore = $('<p></p>');
+    infoScore.text('Aïe! Player-' + victim.index + "a pris" + dmg + "dommages!");
+    setTimeout(() => {  modaleScore.addClass('pop').append(infoScore); }, 1000)
+    setTimeout(() => {  modaleScore.removeClass('pop').empty() }, 2000)
+    setTimeout(() => {  board.updateFight(); }, 3000)
+    
 }
 
 function defend(event){

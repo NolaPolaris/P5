@@ -192,6 +192,10 @@ main {
     background: lawngreen;
 }
 
+
+/* PLAYER-0 */
+
+
 .player-0{
     width: 3rem;
     height: 3rem;
@@ -213,21 +217,55 @@ main {
  100%{ top:40%;  box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%)} 
 }
 
-
-.player-0.move{
-    animation: move 1s infinite;
-}
-
-@keyframes move{
-    0% { top:50%;  box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%);} 
-    50% { top:10%; border-radius:100%; box-shadow: 0px 9px 20px 20px rgb(235 255 0 / 20%); transform: translate(-50%, -50%) scale(1.5); transform-origin: bottom;}
-    100% { top:50%; box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%); opacity:0;} 
-   }
-
 .player-0:hover{
     animation: floating 0.1s infinite ease-in-out;
 
 }
+
+.player-0.damage{
+    width: 3rem;
+    height: 3rem;
+    position: absolute;
+    /* top:50%; */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius:50%;
+    background: yellow;
+    /* box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%);
+    -webkit-box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%);
+    -moz-box-shadow:0px 20px 2px 0px rgb(235 255 0 / 37%); */
+    animation: damage 0.5s infinite;
+}
+@keyframes damage{
+    0% { top:40%;  box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%), } 
+    50% { top:40%;  border-radius:100%; box-shadow: 0px 9px 1px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%) skew(10deg, 10deg); background: red; transform-origin: bottom;}
+    100%{ top:40%;  box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%)} 
+}
+
+.bulle{
+    width: 15rem;
+    height: 10rem;
+    position: absolute;
+    /* top:50%; */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius:50%;
+    background: white;
+    /* box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%);
+    -webkit-box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%);
+    -moz-box-shadow:0px 20px 2px 0px rgb(235 255 0 / 37%); */
+    animation: onomatopee 0.5s infinite;
+}
+
+@keyframes onomatopee{
+    from { top:40%; transform: scale(1.5), } 
+    to { top:10%; transform: translate(-50%, -50%); opacity: 0;}
+}
+
+
+
+/* PLAYER-ONE */
+
 
 .player-1{
     width: 3rem;
@@ -242,7 +280,6 @@ main {
     -webkit-box-shadow: 0px 1px 16px 5px rgb(255 87 240);
     -moz-box-shadow: 0px 1px 16px 5px rgb(255 87 240);
     animation: glow 1.5s infinite;
-
 }
 
 .player-1:hover{
@@ -384,4 +421,29 @@ main {
 .modale.pop{
     transform: scale(1);
     transition: 0.2s;
+}
+
+.modale_score {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 35%;
+    padding:4rem 2rem;
+    opacity:0.9;
+    background: linear-gradient(145deg, rgba(232,233,234,0.5) 0%, rgb(255 255 255) 48%, rgba(232,233,234,0.5) 100%);
+    border:solid 2px #519ecb;
+    border-radius: 1rem;
+    z-index: 2;
+}
+
+.modale_score.pop{
+    transform: scale(1);
+    transition: 0.2s;
+}
+
+.damage{
+
 }
