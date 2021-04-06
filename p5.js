@@ -89,20 +89,21 @@ class Player {
     // On attribut ce statut en fonction de la réponse à la valeur de la checkbox affichée lors de la confrontation
   }
 
-  fight(){
-    if (this.action == 'attack'){
-      console.log('le joueur' + this.index + 'attack !')
-    }
-    if (this.action == 'defend'){
-      console.log('le joueur' + this.index + 'se defend !')
-    }
-    else{
-      console.log("lejoueur prend la fuite")
-    }
-  }
+  // fight(){
+  //   if (this.action == 'attack'){
+  //     console.log('le joueur' + this.index + 'attack !')
+  //   }
+  //   if (this.action == 'defend'){
+  //     console.log('le joueur' + this.index + 'se defend !')
+  //   }
+  //   else{
+  //     console.log("lejoueur prend la fuite")
+  //   }
+  // }
 }
 
 function move(event){
+  console.log("Start function move()");
   let board = event.data.board;
   if(board.fight){
     return;
@@ -150,14 +151,27 @@ function move(event){
   targetCell.updateHTML();
   fight = board.checkFight();
   //si fight => affiche modale de fight
-  if (fight == true){
+  if (fight){
     board.startFight();
   } else {
     board.switchCurrentPlayer(); 
   }
 }
+
+/*
+$("#board").on("keydown", ".player", function(event){
+
+  if(event.key == fleche du haut ou Z){
+    $(this).move()
+    this.compteurMove++;
+  }
+
+});
+*/
   
 function attack(event){
+    console.log('Start function attack()');
+    event.preventDefault();
     console.log('la function attack')
     let modale = $('.modale');
     let modaleScore = $('.modale_score');
@@ -172,20 +186,26 @@ function attack(event){
     modale.removeClass('pop');
     let dmg = fighter.weapon.dmg;
     fighter.action = 'attack';
-    victim.hp = victim.hp - dmg;
+    if ( victim.action = "defend"){
+      victim.hp = victim.hp - (dmg/2);
+    } else {
+      victim.hp = victim.hp - dmg;
+    }
 
     //animation :
-    victimDom.addClass('damage').append(bulle);
-    setTimeout(() => {  victimDom.removeClass('damage').empty(); }, 1000)
-    let infoScore = $('<p></p>');
-    infoScore.text('Aïe! Player-' + victim.index + "a pris" + dmg + "dommages!");
-    setTimeout(() => {  modaleScore.addClass('pop').append(infoScore); }, 1000)
-    setTimeout(() => {  modaleScore.removeClass('pop').empty() }, 2000)
+    // victimDom.addClass('damage').append(bulle);
+    // setTimeout(() => {  victimDom.removeClass('damage').empty(); }, 1000)
+    // let infoScore = $('<p></p>');
+    // infoScore.text('Aïe! Player-' + victim.index + " a pris " + dmg + " dommages!");
+    // setTimeout(() => {  modaleScore.addClass('pop').append(infoScore); }, 1000)
+    // setTimeout(() => {  modaleScore.empty() }, 2000)
+    // setTimeout(() => {  modaleScore.removeClass('pop') }, 2000)
     setTimeout(() => {  board.updateFight(); }, 3000)
     
 }
 
 function defend(event){
+  console.log('Start function defend()');
   console.log('la function defend')
   let board = event.data.board;
   let fighter = board.players[board.currentPlayerIndex];
@@ -222,6 +242,13 @@ class Board {
         this.map[x][y] = new Cell(x, y);
       }
     }
+
+
+    let attackBtn = $('#attack');
+    let defendBtn = $('#defend');
+    attackBtn.click({board: this}, attack);
+    defendBtn.click({board: this}, defend);
+
   }
 
   // Génération d'un entier aléatoire :
@@ -370,8 +397,10 @@ class Board {
   }
 
   checkFight(){
+    console.log('Start function checkFigth()');
     let currentPlayer = this.getCurrentPlayer();
     let secondPlayer = this.getSecondPlayer();
+    this.fight = false;
     if (secondPlayer.x == currentPlayer.x+1 && secondPlayer.y == currentPlayer.y){
       console.log("combat X+1");
       this.fight = true;
@@ -385,27 +414,29 @@ class Board {
       console.log("combat y+1");
       this.fight = true;
     } 
-    if (secondPlayer.x == currentPlayer.x+1 && secondPlayer.y == currentPlayer.y-1){
-      console.log("combat y1");
+    if (secondPlayer.x == currentPlayer.x && secondPlayer.y == currentPlayer.y-1){
+      console.log("combat y-1");
       this.fight = true;
     }
     return this.fight;
   }
 
+
+
   startFight(){
+    console.log('Start function startFigth()');
     let modale = $('.modale');
     let playerName = $('#player_name');
     let currentPlayer = this.getCurrentPlayer();
     modale.addClass('pop'); 
     console.log(currentPlayer.index);
     playerName.text("A toi de jouer player-"+currentPlayer.index)
-    let attackBtn = $('#attack');
-    let defendBtn = $('#defend');
-    attackBtn.click({board: this}, attack);
-    defendBtn.click({board: this}, defend);
+
   }
 
   updateFight(){
+    console.log('Start function updateFigth()');
+
     let currentPlayer = this.getCurrentPlayer();
     let secondPlayer = this.getSecondPlayer();
     if (currentPlayer.action == "attack"){
@@ -420,7 +451,14 @@ class Board {
     console.log(currentPlayer);
     console.log('nouveau victim');
     console.log(secondPlayer);
-    this.startFight();
+
+
+    let modale = $('.modale');
+    let playerName = $('#player_name');
+    modale.addClass('pop'); 
+    console.log(currentPlayer.index);
+    playerName.text("A toi de jouer player-"+currentPlayer.index)
+
   }
   
   get boardSize() {
