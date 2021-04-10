@@ -453,15 +453,17 @@ main {
 }   
 
 .modale {
+    display: none;
     position: absolute;
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     top:50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 35%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
     padding:4rem 2rem;
-    opacity:0.9;
+    opacity:0;
     background: linear-gradient(145deg, rgba(232,233,234,0.5) 0%, rgb(255 255 255) 48%, rgba(232,233,234,0.5) 100%);
     border:solid 2px #519ecb;
     border-radius: 1rem;
@@ -482,20 +484,27 @@ main {
 }
 
 .modale.pop{
-    transform: scale(1);
+    display: flex;
+    opacity: 0.9;
+    top:50%;
+    left: 50%;
+    width: 25%;
+    height: auto;
     transition: 0.2s;
 }
 
 .modale_score {
+    display: none;
     position: absolute;
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     top:50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 35%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
     padding:4rem 2rem;
-    opacity:0.9;
+    opacity:0;
     background: linear-gradient(145deg, rgba(232,233,234,0.5) 0%, rgb(255 255 255) 48%, rgba(232,233,234,0.5) 100%);
     border:solid 2px #519ecb;
     border-radius: 1rem;
@@ -503,28 +512,40 @@ main {
 }
 
 .modale_score.pop{
-    transform: scale(1);
+    display: flex;
+    opacity: 0.9;
+    top:50%;
+    left: 50%;
+    width: 25%;
+    height: auto;
     transition: 0.2s;
 }
 
 .modale_end {
+    display: none;
     position: absolute;
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     top:50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 35%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
     padding:4rem 2rem;
-    opacity:0.9;
-    background: linear-gradient(145deg, rgba(0, 1, 2, 0.5) 0%, rgb(255 255 255) 48%, rgba(38, 46, 53, 0.5) 100%);
+    opacity:0;
+    background: linear-gradient(145deg, rgba(232,233,234,0.5) 0%, rgb(255 255 255) 48%, rgba(232,233,234,0.5) 100%);
     border:solid 2px #519ecb;
     border-radius: 1rem;
     z-index: 2;
 }
 
 .modale_end.pop{
-    transform: scale(1.5);
+    display: flex;
+    opacity: 0.9;
+    top:50%;
+    left: 50%;
+    width: 25%;
+    height: auto;
     transition: 0.2s;
 }
 
