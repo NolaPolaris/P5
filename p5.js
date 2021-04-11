@@ -87,38 +87,36 @@ class Player {
     this.action = null;
     // Statut : attaquant, défenseur, ou attaqué 
     // On attribut ce statut en fonction de la réponse à la valeur de la checkbox affichée lors de la confrontation
-  }
-
-  // naming(){
-  //   let nameChoice = $('#name_choice').addClass('.pop');
-  //   let ok = $('#send_name');
-  //   let name = $('input#name_'+this.index).val()
-  //   ok.click(function(){
-  //     nameChoice.removeClass('pop')
-  //     return name;
-  //   })
-  // }
-
-  
+  } 
 }
 
 function naming(event){
+  event.preventDefault();
   console.log("Start function naming()");
   let board = event.data.board;
+  
   let modale = $("#name_choice");
-  let playerOne = board.players[0].index;
-  let playerTwo = board.players[1].index;
-  let namePlayerOne = $('input#name_player-'+playerOne).val();
-  let namePlayerTwo = $('input#name_player-'+playerTwo).val();
-  let playerOneDom = $('.player-'+playerOne);
-  let playerTwoDom = $('.player-'+playerTwo);
-  board.players[0].name = namePlayerOne;
-  board.players[1].name = namePlayerTwo;
-  playerOneDom.attr("data-name", namePlayerOne);
-  playerTwoDom.attr("data-name", namePlayerTwo);
-  console.log(board.players[0].name)
-  console.log(board.players[1].name)
-  modale.removeClass('pop');
+  let inputOne =  $('#name_player-0');
+  let inputTwo = $('#name_player-1');
+
+  // if (!inputOne.validity.valid === true || !inputTwo.validity.valid === true ){
+  //   modale.addClass('wrong');
+  //   return;
+  // }
+
+  // else {
+    let namePlayerOne = $('input#name_player-0').val();
+    let namePlayerTwo = $('input#name_player-1').val();
+    let playerOneDom = $('.player-0');
+    let playerTwoDom = $('.player-1');
+    board.players[0].name = namePlayerOne;
+    board.players[1].name = namePlayerTwo;
+    playerOneDom.attr("data-name", namePlayerOne);
+    playerTwoDom.attr("data-name", namePlayerTwo);
+    console.log(board.players[0].name)
+    console.log(board.players[1].name)
+    modale.removeClass('pop');
+  // }  
 }
 
 
@@ -522,9 +520,12 @@ class Board {
     }
 
     let nameChoice = $('#name_choice');
+    let inputOne = $('#name_player-0');
+    let inputTwo = $('#name_player-1');
     let ok = $("#send_name");
+    let form = $("#name_choice");
     nameChoice.addClass('pop');
-    ok.click({board: this}, naming);
+    form.submit({board: this}, naming);
   }
 }
 

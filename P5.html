@@ -26,8 +26,8 @@
             <p>C'est la bagarre !</p>
             <span id="player_name"></span>
             <div>
-                <div type=button class=btn id="attack">ATTACK !</div>
-                <div type=button class=btn id="defend">DEFEND !</div>
+                <span class=btn id="attack">ATTACK !</span>
+                <span class=btn id="defend">DEFEND !</span>
             </div>
         </div>
         <div id="score" class="modale">
@@ -35,11 +35,14 @@
         <div id="end" class="modale">
             <p id=player_dead></p>
         </div>
-        <div id="name_choice" class="modale">
-            <input type="text" id="name_player-0">
-            <input type="text" id="name_player-1">
-            <button id="send_name">OK</button>
-        </div>
+        <form id="name_choice" class="modale" name="choice">
+            <p>Choose a name !</p>
+            <div>
+                <input type="text" id="name_player-0" placeholder="Player One" required pattern="[a-zA-Z0-9]+">               
+                <input type="text" id="name_player-1" placeholder="Player Two" required pattern="[a-zA-Z0-9]+">
+            </div>
+            <input type="submit" id="send_name" class="btn" value="Let's go !">
+        </form>
 
         
     </main>
