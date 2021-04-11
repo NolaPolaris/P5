@@ -375,7 +375,7 @@ main {
 
 
 .player-0:after{
-    content: "PLAYER 0";
+    content: attr(data-name);
     width: 4rem;
     height:4rem;
     box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);
@@ -384,7 +384,7 @@ main {
 }
 
 .player-1:after{
-    content: "PLAYER 1";
+    content: attr(data-name);
     width: 4rem;
     height:4rem;
     box-shadow: -1px 200px 400px 0px rgba(0,0,0,1);

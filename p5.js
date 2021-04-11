@@ -75,9 +75,9 @@ class Cell {
 
 class Player {
   constructor(x, y, index) {
-    //this.name = name;
     this.index = index;
     this.hp = 100;
+    this.name = "";
     this.x = x;
     this.y = y;
     this.weapon = {
@@ -88,7 +88,39 @@ class Player {
     // Statut : attaquant, défenseur, ou attaqué 
     // On attribut ce statut en fonction de la réponse à la valeur de la checkbox affichée lors de la confrontation
   }
+
+  // naming(){
+  //   let nameChoice = $('#name_choice').addClass('.pop');
+  //   let ok = $('#send_name');
+  //   let name = $('input#name_'+this.index).val()
+  //   ok.click(function(){
+  //     nameChoice.removeClass('pop')
+  //     return name;
+  //   })
+  // }
+
+  
 }
+
+function naming(event){
+  console.log("Start function naming()");
+  let board = event.data.board;
+  let modale = $("#name_choice");
+  let playerOne = board.players[0].index;
+  let playerTwo = board.players[1].index;
+  let namePlayerOne = $('input#name_player-'+playerOne).val();
+  let namePlayerTwo = $('input#name_player-'+playerTwo).val();
+  let playerOneDom = $('.player-'+playerOne);
+  let playerTwoDom = $('.player-'+playerTwo);
+  board.players[0].name = namePlayerOne;
+  board.players[1].name = namePlayerTwo;
+  playerOneDom.attr("data-name", namePlayerOne);
+  playerTwoDom.attr("data-name", namePlayerTwo);
+  console.log(board.players[0].name)
+  console.log(board.players[1].name)
+  modale.removeClass('pop');
+}
+
 
 function move(event){
   console.log("Start function move()");
@@ -178,30 +210,28 @@ function attack(event){
     fighter.action = 'attack';
     if ( victim.action == 'defend'){
       victim.hp = victim.hp-dmg/2;
-      infoScore.text('Aïe! Player-' + victim.index + " a pris " + dmg/2 + " dommages!");
+      infoScore.text('Aïe!' + victim.name + " a pris " + dmg/2 + " dommages!");
 
     }
     else{
       victim.hp = victim.hp - dmg;
-      infoScore.text('Aïe! Player-' + victim.index + " a pris " + dmg + " dommages!");
+      infoScore.text('Aïe!' + victim.name + " a pris " + dmg + " dommages!");
     }
-
-
-       
+     
     //animation :
     victimDom.addClass('damage').append(bulle);
     setTimeout(() => {  victimDom.removeClass('damage')},500)
     setTimeout(() => {  bulle.remove()},500)
     if ( victim.hp <=0){
       setTimeout(() => {  modaleEnd.addClass('pop')}, 1000)
-      setTimeout(() => {  deathNote.text('youre dead player-'+victim.index); modaleEnd.addClass('pop')}, 1000)
+      setTimeout(() => {  deathNote.text('youre dead'+victim.name); modaleEnd.addClass('pop')}, 1000)
     } else {
       setTimeout(() => {  modaleScore.addClass('pop').append(infoScore); }, 1000)
       setTimeout(() => {  modaleScore.empty() }, 2000)
       setTimeout(() => {  modaleScore.removeClass('pop') }, 2000)
       setTimeout(() => {  board.updateFight(); }, 3000)    
     }
-    }
+}
    
 
 function defend(event){
@@ -287,7 +317,7 @@ class Board {
   
   playerRandomCells(qty) {
     let counter = 0;
-    
+      
     while(counter < qty) {
       let randomX = this.getRandomInt(this.boardSize);
       let randomY = this.getRandomInt(this.boardSize);
@@ -421,7 +451,7 @@ class Board {
     let playerName = $('#player_name');
     let currentPlayer = this.getCurrentPlayer();
     modale.addClass('pop'); 
-    playerName.text("A toi de jouer player-"+currentPlayer.index)
+    playerName.text("A toi de jouer "+currentPlayer.name)
     let attackBtn = $('#attack');
     let defendBtn = $('#defend');
     attackBtn.click({board: this}, attack);
@@ -453,7 +483,7 @@ class Board {
     let currentPlayer = this.getCurrentPlayer();
     let secondPlayer = this.getSecondPlayer();
     modale.addClass('pop');
-    playerName.text("A toi de jouer player-"+currentPlayer.index)
+    playerName.text("A toi de jouer "+currentPlayer.name)
     }
 
     
@@ -490,6 +520,11 @@ class Board {
         //timeout += 20;
       }
     }
+
+    let nameChoice = $('#name_choice');
+    let ok = $("#send_name");
+    nameChoice.addClass('pop');
+    ok.click({board: this}, naming);
   }
 }
 
@@ -499,11 +534,10 @@ $( document ).ready(function() {
   let board = new Board(taille);
   console.log(board.boardSize);
   console.log(board.map[1][2]);
-  // board.printLogBoard();
-  
-  
   $('#rideau').addClass('slide-up');
   board.printBoard();
+  // AFFICHER MODALE NAME
+ 
 
   //A GARDER Animation introduction
   
