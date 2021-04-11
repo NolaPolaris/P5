@@ -483,7 +483,7 @@ main {
     margin-left: 1rem;
 }
 
-.modale.pop{
+.pop{
     display: flex;
     opacity: 0.9;
     top:50%;
@@ -493,11 +493,11 @@ main {
     transition: 0.2s;
 }
 
-.modale_score {
-    display: none;
-    position: absolute;
+#score {
+    /* display: none;
+    position: absolute; */
     /* display: flex; */
-    flex-direction: column;
+    /* flex-direction: column;
     top:50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -508,10 +508,10 @@ main {
     background: linear-gradient(145deg, rgba(232,233,234,0.5) 0%, rgb(255 255 255) 48%, rgba(232,233,234,0.5) 100%);
     border:solid 2px #519ecb;
     border-radius: 1rem;
-    z-index: 2;
+    z-index: 2; */
 }
 
-.modale_score.pop{
+/* .modale_score.pop{
     display: flex;
     opacity: 0.9;
     top:50%;
@@ -547,7 +547,7 @@ main {
     width: 25%;
     height: auto;
     transition: 0.2s;
-}
+} */
 
 
 

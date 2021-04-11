@@ -88,18 +88,6 @@ class Player {
     // Statut : attaquant, défenseur, ou attaqué 
     // On attribut ce statut en fonction de la réponse à la valeur de la checkbox affichée lors de la confrontation
   }
-
-  // fight(){
-  //   if (this.action == 'attack'){
-  //     console.log('le joueur' + this.index + 'attack !')
-  //   }
-  //   if (this.action == 'defend'){
-  //     console.log('le joueur' + this.index + 'se defend !')
-  //   }
-  //   else{
-  //     console.log("lejoueur prend la fuite")
-  //   }
-  // }
 }
 
 function move(event){
@@ -172,10 +160,10 @@ $("#board").on("keydown", ".player", function(event){
 function attack(event){
     console.log('Start function attack()');
     event.preventDefault();
-    let modale = $('.modale');
-    let modaleScore = $('.modale_score');
+    let modale = $('#fight');
+    let modaleScore = $('#score');
     let infoScore = $('<p></p>');
-    let modaleEnd = $('.modale_end');
+    let modaleEnd = $('#end');
     let deathNote = $('#player_dead')
     let bulle = $('<span></span>').addClass('bulle');
     let board = event.data.board;
@@ -429,7 +417,7 @@ class Board {
 
   startFight(){
     console.log('Start function startFigth()');
-    let modale = $('.modale');
+    let modale = $('#fight');
     let playerName = $('#player_name');
     let currentPlayer = this.getCurrentPlayer();
     modale.addClass('pop'); 
@@ -453,8 +441,8 @@ class Board {
       currentPlayer.action = "defend";
     }
 
-    let modale = $('.modale');
-    let modaleEnd =  $('.modale_end');
+    let modale = $('#fight');
+    let modaleEnd =  $('#end');
     let deathNote = $('#player_dead');
     let playerName = $('#player_name');
 
