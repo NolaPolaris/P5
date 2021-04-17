@@ -175,17 +175,6 @@ function move(event){
     board.switchCurrentPlayer(); 
   }
 }
-
-/*
-$("#board").on("keydown", ".player", function(event){
-
-  if(event.key == fleche du haut ou Z){
-    $(this).move()
-    this.compteurMove++;
-  }
-
-});
-*/
   
 function attack(event){
     console.log('Start function attack()');
@@ -252,8 +241,10 @@ class Board {
     this.map = new Array(boardSize);
     //players = tableau contenant les joueurs (objet de type Player)
     this.players = new Array;
+    // on enregistre un entier pour distinguer le joueur courant, et le joueur secondaire:
     this.currentPlayerIndex = 0;
     this.secondPlayerIndex = 1;
+    //on ajoute un statut "fight", dont la valeur par défaut est "false":
     this.fight = false;
     // On appelle la méthode qui permet d'initialiser la map:
     this.initializeMap();
@@ -278,8 +269,8 @@ class Board {
   };
   
   // Bloque 10 cellules choisis aleatoirement. 
-  // Attribution d'index aléatoire selon les conditions suivantes : les index doivbent toujours être différents les uns des autres,
-  // les entiers qui les constituent ne doivent pas dépasser 10 (nombre de cases "obastacles")
+  // Attribution d'index aléatoire selon les conditions suivantes : les index doivent toujours être différents les uns des autres,
+  // on passe en paramètre un variable (qty) qui pourra être modifiée si l'on souhaite ajouter + ou - d'obstacles, d'armes ou de joueurs
   blockRandomCells(qty) {
     let counter = 0;
     while(counter < qty) {
@@ -336,7 +327,8 @@ class Board {
     }
   };
   
-  // return an array of cells accessible from the "start_cell" parameter [Cell object]
+  // On crée une fonction qui retourne un array des différentes cellules accessibles
+  // depuis une cellule de départ passée en paramètre de la fonction
   getAccessibleCells(startCell){
     let accessibleCells = new Array;
     
@@ -393,7 +385,7 @@ class Board {
     return accessibleCells;
   
   } 
-  
+  // Deux fonctions permettant de connaître l'index des joueurs :
   getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
   }
@@ -402,6 +394,7 @@ class Board {
     return this.players[this.secondPlayerIndex];
   }
   
+  // fonction qui permet de switcher le statut du joueur à chaque tour:
   switchCurrentPlayer(){
     console.log("start Switch")
     if(this.currentPlayerIndex == 0){
@@ -413,11 +406,15 @@ class Board {
     }
   }
 
+  //fonction permettant d'obtenir la cellule du joueur dont on passe l'index en paramètre:
+
   getPlayerCell(playerIndex) {
     let player = this.players[playerIndex];
     return this.map[player.x][player.y];
   }
 
+  //Fonction permettant de vérifier si les conditions sont remplies pour qu'il y ait un combat
+  //(si les deux joueurs sont dsur des cellules adjacentes, horizontales ou verticales):
   checkFight(){
     console.log('Start function checkFigth()');
     let currentPlayer = this.getCurrentPlayer();
@@ -443,8 +440,11 @@ class Board {
     return this.fight;
   }
 
+  //Fonction qui lance le combat dès que les conditions de fights sont remplies:
+
   startFight(){
     console.log('Start function startFigth()');
+      //affichage d'une modale indiquant le joueur dont c'est le tour, et le choix entre attaquer ou se défendre:
     let modale = $('#fight');
     let playerName = $('#player_name');
     let currentPlayer = this.getCurrentPlayer();
@@ -452,10 +452,14 @@ class Board {
     playerName.text("A toi de jouer "+currentPlayer.name)
     let attackBtn = $('#attack');
     let defendBtn = $('#defend');
+    //on appelle ensuite une fonction attack() ou defend() sur l'event "click",
+    // et on précise en paramètre que this renverra à l'objet board, (plutôt qu'au handler de l'event) afin d'accéder aux différentes méthodes et fonctions:
     attackBtn.click({board: this}, attack);
     defendBtn.click({board: this}, defend);
   }
 
+  //unpdateFight() nous permet de clôturer un tour, de mettre à jour le statut des joueurs
+  //(PV et statut) et de switcher les joueurs:
   updateFight(){
     
     console.log('Start function updateFigth()');
@@ -474,6 +478,8 @@ class Board {
     let deathNote = $('#player_dead');
     let playerName = $('#player_name');
 
+    //si les PV du joueurs sont inférieurs ou égaux à 0, le combat est fini
+    // donc on sort de la fonction, sinon, on renvoit une modale de choix:
     if (currentPlayer.hp <= 0) {
       return;
     } else {
@@ -487,10 +493,11 @@ class Board {
     
   }
   
+// obtenir la taille du plateau de jeu :
   get boardSize() {
     return this.map.length
   }
- 
+//Afficher le plateau de jeu dans le HTML:
   printBoard() {
     let plateau = $('#board');
     let timeout = 0;
