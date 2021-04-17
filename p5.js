@@ -211,7 +211,7 @@ function attack(event){
     setTimeout(() => {  bulle.remove()},500)
     if ( victim.hp <=0){
       setTimeout(() => {  modaleEnd.addClass('pop')}, 1000)
-      setTimeout(() => {  deathNote.text('youre dead'+victim.name); modaleEnd.addClass('pop')}, 1000)
+      setTimeout(() => {  deathNote.text('You are dead '+victim.name); modaleEnd.addClass('pop')}, 1000)
     } else {
       setTimeout(() => {  modaleScore.addClass('pop').append(infoScore); }, 1000)
       setTimeout(() => {  modaleScore.empty() }, 2000)
@@ -271,6 +271,12 @@ class Board {
   // Bloque 10 cellules choisis aleatoirement. 
   // Attribution d'index aléatoire selon les conditions suivantes : les index doivent toujours être différents les uns des autres,
   // on passe en paramètre un variable (qty) qui pourra être modifiée si l'on souhaite ajouter + ou - d'obstacles, d'armes ou de joueurs
+ 
+  /**
+ * Block or place n cells / weapon / players you want randomly on the map
+ * @param { Number } number as many obstacles/weapon/players you want in your map
+ */
+
   blockRandomCells(qty) {
     let counter = 0;
     while(counter < qty) {
@@ -329,6 +335,7 @@ class Board {
   
   // On crée une fonction qui retourne un array des différentes cellules accessibles
   // depuis une cellule de départ passée en paramètre de la fonction
+
   getAccessibleCells(startCell){
     let accessibleCells = new Array;
     
@@ -474,8 +481,6 @@ class Board {
     }
 
     let modale = $('#fight');
-    let modaleEnd =  $('#end');
-    let deathNote = $('#player_dead');
     let playerName = $('#player_name');
 
     //si les PV du joueurs sont inférieurs ou égaux à 0, le combat est fini
@@ -485,12 +490,9 @@ class Board {
     } else {
     this.switchCurrentPlayer();
     let currentPlayer = this.getCurrentPlayer();
-    let secondPlayer = this.getSecondPlayer();
     modale.addClass('pop');
     playerName.text("A toi de jouer "+currentPlayer.name)
-    }
-
-    
+    }    
   }
   
 // obtenir la taille du plateau de jeu :
@@ -499,9 +501,7 @@ class Board {
   }
 //Afficher le plateau de jeu dans le HTML:
   printBoard() {
-    let plateau = $('#board');
-    let timeout = 0;
-    
+    let plateau = $('#board'); 
     for (let y = 0; y < this.boardSize; y++) {
       // create div line
       let line = $('<div></div>').addClass('line').attr('line-index', y);
@@ -521,17 +521,14 @@ class Board {
         // add cell to line
         line.append(cell);
         this.map[x][y].updateHTML();
-        //setTimeout(() => { line.append(cell); }, timeout);
-        //timeout += 20;
+        // setTimeout(() => { line.append(cell); }, timeout);
+        // timeout += 20;
       }
     }
 
     let nameChoice = $('#name_choice');
-    let inputOne = $('#name_player-0');
-    let inputTwo = $('#name_player-1');
-    let ok = $("#send_name");
     let form = $("#name_choice");
-    nameChoice.addClass('pop');
+    setTimeout(() => {  nameChoice.addClass('pop');  }, 1200)
     form.submit({board: this}, naming);
   }
 }
@@ -542,27 +539,26 @@ $( document ).ready(function() {
   let board = new Board(taille);
   console.log(board.boardSize);
   console.log(board.map[1][2]);
-  $('#rideau').addClass('slide-up');
-  board.printBoard();
-  // AFFICHER MODALE NAME
- 
-
+  // Sans animation de début :
+  // $('#rideau').addClass('slide-up');
+  // board.printBoard();
+  
   //A GARDER Animation introduction
   
-  // $('#go').mouseenter(function(){
-  //   $(this).addClass('shine')
-  // });
+  $('#go').mouseenter(function(){
+    $(this).addClass('shine')
+  });
   
-  // $('#go').mousedown(function(){
-  //   $(this).removeClass('shine')
-  // });
+  $('#go').mousedown(function(){
+    $(this).removeClass('shine')
+  });
   
-  // $('#go').mouseup(function() {
-  //   $(this).addClass('active'),
+  $('#go').mouseup(function() {
+    $(this).addClass('active'),
   
-  //   setTimeout(() => {  $('#rideau').addClass('slide-up'); }, 1700),
-  //   setTimeout(() => {  board.printBoard();  }, 2000)
+    setTimeout(() => {  $('#rideau').addClass('slide-up'); }, 1700),
+    setTimeout(() => {  board.printBoard();  }, 2000)
   
-  // });
+  });
 
 });

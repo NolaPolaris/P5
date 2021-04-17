@@ -2,6 +2,7 @@
 body {
     margin: 0;
     animation: sky 100s infinite linear;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 @keyframes sky {
@@ -214,23 +215,7 @@ main {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius:50%;
-    background: yellow;
-    animation: damage 0.5s infinite;
-}
-@keyframes damage{
-    0% { top:40%;  box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%), } 
-    50% { top:40%;  border-radius:100%; box-shadow: 0px 9px 1px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%) skew(10deg, 10deg); background: red; transform-origin: bottom;}
-    100%{ top:40%;  box-shadow: 0px 20px 2px 0px rgb(235 255 0 / 37%); transform: translate(-50%, -50%)} 
-}
-
-.player-0.dead{
-    width: 3rem;
-    height: 0.5rem;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    background: red;
+    animation: playing 0.1s infinite ease-in-out;
 }
 
 .bulle{
@@ -394,8 +379,6 @@ main {
     justify-content: center;
     align-items: center;
     opacity: 0.9;
-    top:50%;
-    left: 50%;
     width: auto;
     height: auto;
     transition: 0.2s;
